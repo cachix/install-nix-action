@@ -1,0 +1,9 @@
+name: 'Nix'
+description: 'Install Nix'
+author: 'Domen Kožar'
+branding:
+  color: 'blue'
+  icon: 'sun'
+runs:
+  using: 'node12'
+  main: 'lib/main.js'
