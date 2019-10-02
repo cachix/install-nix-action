@@ -1,6 +1,6 @@
-# nix-action
+# install-nix-action
 
-![github actions badge](https://github.com/cachix/nix-action/workflows/nix-action%20test/badge.svg)
+![github actions badge](https://github.com/cachix/install-nix-action/workflows/install-nix-action%20test/badge.svg)
 
 Installs [Nix](https://nixos.org/nix/) on GitHub Actions for the supported platforms: Linux and macOS.
 
@@ -18,12 +18,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: cachix/nix-action@v1
+    - uses: cachix/install-nix-action@v1
     - run: nix-build
 ```
 
 See also [cachix-action](https://github.com/cachix/cachix-action) for
-simple binary cache setup.
+simple binary cache setup to speed up your builds and share binaries
+with developers.
 
 ---
 

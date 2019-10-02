@@ -1,4 +1,4 @@
-name: "nix-action test"
+name: "install-nix-action test"
 on:
   pull_request:
   push:

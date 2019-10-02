@@ -1,8 +1,8 @@
 {
-  "name": "nix-action",
+  "name": "install-nix-action",
   "version": "1.0.0",
   "private": true,
-  "description": "nix-build with the help of caching to Cachix",
+  "description": "Installs Nix on GitHub Actions for the supported platforms: Linux and macOS.",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cachix/nix-action.git"
+    "url": "git+https://github.com/cachix/install-nix-action.git"
   },
   "keywords": [
     "actions",
