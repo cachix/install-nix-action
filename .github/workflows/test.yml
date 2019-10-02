@@ -12,6 +12,8 @@ jobs:
     - uses: actions/checkout@v1
     - run: yarn install --frozen-lockfile
     - run: yarn build
+    # TODO: just commit it using github
+    - run: git diff --exit-code
     - run: yarn test
     - name: Install Nix
       uses: ./
