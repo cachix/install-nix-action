@@ -1,6 +1,6 @@
 # nix-action
 
-![github actions badge](https://github.com/cachix/nix-action/workflows/.github/workflows/test.yml/badge.svg)
+![github actions badge](https://github.com/cachix/nix-action/workflows/nix-action%20test/badge.svg)
 
 Installs [Nix](https://nixos.org/nix/) in platform agnostic way (supports: Linux/macOS).
 
