@@ -2,7 +2,7 @@
 
 ![github actions badge](https://github.com/cachix/nix-action/workflows/nix-action%20test/badge.svg)
 
-Installs [Nix](https://nixos.org/nix/) in platform agnostic way (supports: Linux/macOS).
+Installs [Nix](https://nixos.org/nix/) on GitHub Actions for the supported platforms: Linux and macOS.
 
 ## Usage
 
@@ -29,7 +29,7 @@ simple binary cache setup.
 
 ## Hacking
 
-Install the dependencies  
+Install the dependencies
 ```bash
 $ yarn install
 ```
@@ -39,7 +39,7 @@ Build the typescript
 $ yarn build
 ```
 
-Run the tests :heavy_check_mark:  
+Run the tests :heavy_check_mark:
 ```bash
 $ yarn test
 ```
