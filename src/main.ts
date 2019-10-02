@@ -11,6 +11,10 @@ async function run() {
     const PATH = process.env.PATH;  
     const CERTS_PATH = home + '/.nix-profile/etc/ssl/certs/ca-bundle.crt';
 
+    // Workaround a segfault: https://github.com/NixOS/nix/issues/2733
+    await exec.exec("sudo", ["mkdir", "-p", "/etc/nix"]);
+    await exec.exec("sudo", ["echo", "http2 = false", ">>", "/etc/nix/nix.conf"]);
+
     // TODO: retry due to all the things that go wrong
     const nixInstall = await tc.downloadTool('https://nixos.org/nix/install');
     await exec.exec("sh", [nixInstall]);
