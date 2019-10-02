@@ -1,5 +1,5 @@
-name: 'Nix'
-description: 'Install Nix'
+name: 'Install Nix'
+description: 'Installs Nix on GitHub Actions for the supported platforms: Linux and macOS.'
 author: 'Domen Kožar'
 branding:
   color: 'blue'
