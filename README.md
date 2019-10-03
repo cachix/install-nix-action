@@ -22,6 +22,9 @@ jobs:
     - run: nix-build
 ```
 
+
+See [action.yml](action.yml) for all options.
+
 See also [cachix-action](https://github.com/cachix/cachix-action) for
 simple binary cache setup to speed up your builds and share binaries
 with developers.
