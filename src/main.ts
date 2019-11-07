@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as tc from '@actions/tool-cache';
-import {homedir, userInfo} from 'os';
+import {homedir, userInfo, type} from 'os';
 import {existsSync} from 'fs';
 
 async function run() {
@@ -17,6 +17,11 @@ async function run() {
 
     // Set jobs to number of cores
     await exec.exec("sudo", ["sh", "-c", "echo max-jobs = auto >> /etc/nix/nix.conf"]);
+
+    // Catalina workaround https://github.com/NixOS/nix/issues/2925
+    if (type() == "Darwin") {
+      await exec.exec("sudo", ["mount", "-uw", "/"]);
+    }
 
     // TODO: retry due to all the things that go wrong
     const nixInstall = await tc.downloadTool('https://nixos.org/nix/install');
