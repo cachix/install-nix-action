@@ -35,7 +35,7 @@ async function run() {
     // TODO: retry due to all the things that go wrong
     const nixInstall = await tc.downloadTool('https://nixos.org/nix/install');
     await exec.exec("sh", [nixInstall, "--daemon"]);
-    core.exportVariable('PATH', `${PATH}:/nix/var/nix/profiles/default/bin`)
+    core.exportVariable('PATH', `${PATH}:/nix/var/nix/profiles/default/bin:/nix/var/nix/profiles/per-user/runner/profile/bin`)
     core.exportVariable('NIX_PATH', `/nix/var/nix/profiles/per-user/root/channels`)
 
     if (type() == "Darwin") {
