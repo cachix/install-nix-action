@@ -1,8 +1,7 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as tc from '@actions/tool-cache';
-import {homedir, userInfo, type} from 'os';
-import {existsSync} from 'fs';
+import {type} from 'os';
 
 async function run() {
   try {
@@ -15,6 +14,9 @@ async function run() {
 
     // Set jobs to number of cores
     await exec.exec("sudo", ["sh", "-c", "echo max-jobs = auto >> /etc/nix/nix.conf"]);
+
+    // Allow binary caches for runner user
+    await exec.exec("sudo", ["sh", "-c", "echo trusted-users = root runner >> /etc/nix/nix.conf"]);
 
     // Catalina workaround https://github.com/NixOS/nix/issues/2925
     if (type() == "Darwin") {
