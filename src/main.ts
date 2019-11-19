@@ -52,6 +52,11 @@ async function run() {
     if (type() == "Darwin") {
       // macOS needs certificates hints
       core.exportVariable('NIX_SSL_CERT_FILE', '/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt');
+
+      // TODO: nc doesn't work correctly on macOS :(
+      //await exec.exec("sh", ["-c", "while ! nc -zU /nix/var/nix/daemon-socket/socket; do sleep 0.5; done"]);
+      // macOS needs time to reload the daemon :(
+      await exec.exec("sleep", ["10"]);
     }
 
   } catch (error) {
