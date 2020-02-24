@@ -3,6 +3,8 @@ import * as exec from '@actions/exec';
 import * as tc from '@actions/tool-cache';
 import {execFileSync} from 'child_process';
 import {type} from 'os';
+import {exit} from 'process';
+import {createConnection} from 'net';
 
 async function nixConf() {
     // Workaround a segfault: https://github.com/NixOS/nix/issues/2733
@@ -46,12 +48,24 @@ async function run() {
       core.exportVariable('NIX_SSL_CERT_FILE', '/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt');
 
       // TODO: nc doesn't work correctly on macOS :(
-      await exec.exec("sleep", ["10"]);
+      await awaitSocket();
     }
   } catch (error) {
     core.setFailed(`Action failed with error: ${error}`);
     throw(error);
   }
+}
+
+async function awaitSocket() {
+  const daemonSocket = createConnection({ path: '/nix/var/nix/daemon-socket/socket' });
+  daemonSocket.on('error', async () => {
+    console.log('Waiting for daemon socket to be available, reconnecting...');
+    await new Promise(resolve => setTimeout(resolve, 500));
+    await awaitSocket();
+  });
+  daemonSocket.on('connect', () => {
+    exit(0);
+  });
 }
 
 run();
