@@ -1,7 +1,10 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as tc from '@actions/tool-cache';
+import {execFileSync} from 'child_process';
 import {type} from 'os';
+import {exit} from 'process';
+import {createConnection} from 'net';
 
 async function nixConf() {
     // Workaround a segfault: https://github.com/NixOS/nix/issues/2733
@@ -17,28 +20,19 @@ async function nixConf() {
 
 async function run() {
   try {
-    const PATH = process.env.PATH;  
-    const INSTALL_PATH = '/opt/nix';
+    const PATH = process.env.PATH;
  
     await nixConf();
 
     // Catalina workaround https://github.com/NixOS/nix/issues/2925
     if (type() == "Darwin") {
-      await exec.exec("sudo", ["sh", "-c", `echo \"nix\t${INSTALL_PATH}\"  >> /etc/synthetic.conf`]);
-      await exec.exec("sudo", ["sh", "-c", `mkdir -m 0755 ${INSTALL_PATH} && chown runner ${INSTALL_PATH}`]);
-      await exec.exec("/System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util", ["-B"]);
-
-      // Needed for sudo to pass NIX_IGNORE_SYMLINK_STORE
-      await exec.exec("sudo", ["sh", "-c", "echo 'Defaults env_keep += NIX_IGNORE_SYMLINK_STORE'  >> /etc/sudoers"]);
-      core.exportVariable('NIX_IGNORE_SYMLINK_STORE', "1");
-      // Needed for nix-daemon installation
-      await exec.exec("sudo", ["launchctl", "setenv", "NIX_IGNORE_SYMLINK_STORE", "1"]);
+      execFileSync(`${__dirname}/create-darwin-volume.sh`, { stdio: 'inherit' });
     }
 
     // Needed due to multi-user being too defensive
     core.exportVariable('ALLOW_PREEXISTING_INSTALLATION', "1"); 
 
-    // TODO: retry due to all the things that go wrong
+    // TODO: retry due to all the things that can go wrong
     const nixInstall = await tc.downloadTool('https://nixos.org/nix/install');
     await exec.exec("sh", [nixInstall, "--daemon"]);
 
@@ -54,15 +48,24 @@ async function run() {
       core.exportVariable('NIX_SSL_CERT_FILE', '/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt');
 
       // TODO: nc doesn't work correctly on macOS :(
-      //await exec.exec("sh", ["-c", "while ! nc -zU /nix/var/nix/daemon-socket/socket; do sleep 0.5; done"]);
-      // macOS needs time to reload the daemon :(
-      await exec.exec("sleep", ["10"]);
+      await awaitSocket();
     }
-
   } catch (error) {
     core.setFailed(`Action failed with error: ${error}`);
     throw(error);
-  } 
+  }
+}
+
+async function awaitSocket() {
+  const daemonSocket = createConnection({ path: '/nix/var/nix/daemon-socket/socket' });
+  daemonSocket.on('error', async () => {
+    console.log('Waiting for daemon socket to be available, reconnecting...');
+    await new Promise(resolve => setTimeout(resolve, 500));
+    await awaitSocket();
+  });
+  daemonSocket.on('connect', () => {
+    exit(0);
+  });
 }
 
 run();
