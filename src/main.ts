@@ -27,6 +27,9 @@ async function run() {
     // Catalina workaround https://github.com/NixOS/nix/issues/2925
     if (type() == "Darwin") {
       execFileSync(`${__dirname}/create-darwin-volume.sh`, { stdio: 'inherit' });
+
+      // Disable spotlight indexing of /nix to speed up performance
+      await exec.exec("sudo", ["mdutil", "-i", "off", "/nix"]);
     }
 
     // Needed due to multi-user being too defensive
