@@ -31,9 +31,6 @@ sh <(curl https://nixos.org/nix/install) --daemon
 # write nix.conf again as installation overwrites it
 nixConf
 
-# Enable sandbox on Darwin/Linux
-sudo sh -c 'echo sandbox = true >> /etc/nix/nix.conf'
-
 # macOS needs certificates hints
 if [[ $OSTYPE =~ darwin ]]; then
   cert_file=/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt
