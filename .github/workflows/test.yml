@@ -4,18 +4,7 @@ on:
   push:
 jobs:
   tests:
-    strategy:
-      matrix:
-        os: [ubuntu-18.04, macos-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - run: yarn install --frozen-lockfile
-    - run: yarn build
-    - name: Install Nix
-      uses: ./
-    - run: nix-env -iA cachix -f https://github.com/NixOS/nixpkgs/tarball/ab5863afada3c1b50fc43bf774b75ea71b287cde
-    - run: cat /etc/nix/nix.conf
-    # cachix should be available and be able to configure a cache
-    - run: cachix use cachix
-    - run: nix-build test.nix
+      - run: sudo du -sh /var/*
+      - run: sudo du -sh /usr/*
