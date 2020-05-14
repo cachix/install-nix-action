@@ -1,6 +1,9 @@
 name: 'Install Nix'
 description: 'Installs Nix on GitHub Actions for the supported platforms: Linux and macOS.'
 author: 'Domen Kožar'
+inputs:
+  install_url:
+    description: 'Installation URL that will contain a script to install Nix'
 branding:
   color: 'blue'
   icon: 'sun'
