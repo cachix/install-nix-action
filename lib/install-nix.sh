@@ -26,7 +26,7 @@ nixConf
 # Needed due to multi-user being too defensive
 export ALLOW_PREEXISTING_INSTALLATION=1
 
-sh <(curl -L https://nixos.org/nix/install) --daemon
+sh <(curl -L ${INPUT_INSTALL_URL:-https://nixos.org/nix/install}) --daemon
 
 # write nix.conf again as installation overwrites it
 nixConf
