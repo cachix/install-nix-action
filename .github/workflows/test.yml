@@ -9,12 +9,9 @@ jobs:
         os: [ubuntu-18.04, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - run: yarn install --frozen-lockfile
     - run: yarn build
-    # TODO: just commit it using github
-    - run: git diff --exit-code
-    - run: yarn test
     - name: Install Nix
       uses: ./
     - run: nix-env -iA cachix -f https://github.com/NixOS/nixpkgs/tarball/ab5863afada3c1b50fc43bf774b75ea71b287cde
