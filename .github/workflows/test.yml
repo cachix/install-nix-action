@@ -3,10 +3,10 @@ on:
   pull_request:
   push:
 jobs:
-  tests:
+  simple-build:
     strategy:
       matrix:
-        os: [ubuntu-18.04, macos-latest]
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
@@ -14,8 +14,23 @@ jobs:
     - run: yarn build
     - name: Install Nix
       uses: ./
-    - run: nix-env -iA cachix -f https://github.com/NixOS/nixpkgs/tarball/ab5863afada3c1b50fc43bf774b75ea71b287cde
+    - run: nix-env -iA cachix -f https://cachix.org/api/v1/install
     - run: cat /etc/nix/nix.conf
     # cachix should be available and be able to configure a cache
     - run: cachix use cachix
     - run: nix-build test.nix
+  no-channel:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2
+    - run: yarn install --frozen-lockfile
+    - run: yarn build
+    - name: Install Nix
+      uses: ./
+      with:
+        skip_adding_nixpkgs_channel: true
+    - run: nix-build test.nix && exit 1 || echo "OK"
+    - run: NIX_PATH=nixpkgs=https://github.com/NixOS/nixpkgs/tarball/ab5863afada3c1b50fc43bf774b75ea71b287cde nix-build test.nix

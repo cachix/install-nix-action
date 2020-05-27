@@ -4,6 +4,8 @@ author: 'Domen Kožar'
 inputs:
   install_url:
     description: 'Installation URL that will contain a script to install Nix'
+  skip_adding_nixpkgs_channel:
+    description: 'Skip adding nixpkgs-unstable channel'
 branding:
   color: 'blue'
   icon: 'sun'
