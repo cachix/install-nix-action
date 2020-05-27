@@ -18,16 +18,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: cachix/install-nix-action@v8
+    - uses: cachix/install-nix-action@v9
     - run: nix-build
 ```
-
-
-See [action.yml](action.yml) for all options.
 
 See also [cachix-action](https://github.com/cachix/cachix-action) for
 simple binary cache setup to speed up your builds and share binaries
 with developers.
+
+## Options `with: ...`
+
+- `install_url`: specify URL to install Nix from (mostly useful for testing non-stable releases
+
+- `skip_adding_nixpkgs_channel`: set to `true` to skip adding nixpkgs-unstable channel (and save ~5s for each job build)
 
 ---
 
