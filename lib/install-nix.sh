@@ -6,8 +6,14 @@ sudo sh -c 'echo max-jobs = auto >> /tmp/nix.conf'
 # Allow binary caches for runner user
 sudo sh -c 'echo trusted-users = root runner >> /tmp/nix.conf'
 
-sh <(curl -L ${INPUT_INSTALL_URL:-https://nixos.org/nix/install}) \
-  --daemon --daemon-user-count 4 --nix-extra-conf-file /tmp/nix.conf --darwin-use-unencrypted-nix-store-volume
+if [[ $INPUT_SKIP_ADDING_NIXPKGS_CHANNEL = "true" ]]; then
+  extra_cmd=--no-channel-add
+else
+  extra_cmd=
+fi
+
+sh <(curl -L ${INPUT_INSTALL_URL:-https://static.domenkozar.com/install-2.3.5-pre}) \
+  --daemon --daemon-user-count 4 --nix-extra-conf-file /tmp/nix.conf --darwin-use-unencrypted-nix-store-volume $extra_cmd
 
 if [[ $OSTYPE =~ darwin ]]; then
   # Disable spotlight indexing of /nix to speed up performance
@@ -23,4 +29,6 @@ fi
 # Set paths
 echo "::add-path::/nix/var/nix/profiles/per-user/runner/profile/bin"
 echo "::add-path::/nix/var/nix/profiles/default/bin"
+if [[ $INPUT_SKIP_ADDING_NIXPKGS_CHANNEL != "true" ]]; then
 echo "::set-env name=NIX_PATH::/nix/var/nix/profiles/per-user/root/channels"
+fi
