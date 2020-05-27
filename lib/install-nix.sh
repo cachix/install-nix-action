@@ -12,7 +12,7 @@ else
   extra_cmd=
 fi
 
-sh <(curl -L ${INPUT_INSTALL_URL:-https://static.domenkozar.com/install-2.3.5-pre}) \
+sh <(curl -L ${INPUT_INSTALL_URL:-https://nixos.org/nix/install}) \
   --daemon --daemon-user-count 4 --nix-extra-conf-file /tmp/nix.conf --darwin-use-unencrypted-nix-store-volume $extra_cmd
 
 if [[ $OSTYPE =~ darwin ]]; then
