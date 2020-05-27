@@ -12,8 +12,8 @@ else
   extra_cmd=
 fi
 
-sh <(curl -L ${INPUT_INSTALL_URL:-https://static.domenkozar.com/install-2.3.5-pre}) \
-  --daemon --daemon-user-count 4 --nix-extra-conf-file /tmp/nix.conf --darwin-use-unencrypted-nix-store-volume $extra_cmd
+sh <(curl -L ${INPUT_INSTALL_URL:-https://nixos.org/nix/install}) \
+  --nix-extra-conf-file /tmp/nix.conf --darwin-use-unencrypted-nix-store-volume $extra_cmd
 
 if [[ $OSTYPE =~ darwin ]]; then
   # Disable spotlight indexing of /nix to speed up performance
