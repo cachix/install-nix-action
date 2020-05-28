@@ -6,10 +6,11 @@ sudo sh -c 'echo max-jobs = auto >> /tmp/nix.conf'
 # Allow binary caches for runner user
 sudo sh -c 'echo trusted-users = root runner >> /tmp/nix.conf'
 
-if [[ $INPUT_SKIP_ADDING_NIXPKGS_CHANNEL = "true" ]]; then
+if [[ $INPUT_SKIP_ADDING_NIXPKGS_CHANNEL = "true" || $INPUT_NIX_PATH != "" ]]; then
   extra_cmd=--no-channel-add
 else
   extra_cmd=
+  INPUT_NIX_PATH="/nix/var/nix/profiles/per-user/root/channels"
 fi
 
 sh <(curl -L ${INPUT_INSTALL_URL:-https://nixos.org/nix/install}) \
@@ -29,6 +30,7 @@ fi
 # Set paths
 echo "::add-path::/nix/var/nix/profiles/per-user/runner/profile/bin"
 echo "::add-path::/nix/var/nix/profiles/default/bin"
-if [[ $INPUT_SKIP_ADDING_NIXPKGS_CHANNEL != "true" ]]; then
-echo "::set-env name=NIX_PATH::/nix/var/nix/profiles/per-user/root/channels"
+
+if [[ $INPUT_NIX_PATH != "" ]]; then
+  echo "::set-env name=NIX_PATH::${INPUT_NIX_PATH}"
 fi

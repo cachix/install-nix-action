@@ -4,6 +4,8 @@ author: 'Domen Kožar'
 inputs:
   install_url:
     description: 'Installation URL that will contain a script to install Nix'
+  nix_path:
+    description: 'Set NIX_PATH environment variable. If set "skip_adding_nixpkgs_channel" will be implicitly enabled'
   skip_adding_nixpkgs_channel:
     description: 'Skip adding nixpkgs-unstable channel'
 branding:
