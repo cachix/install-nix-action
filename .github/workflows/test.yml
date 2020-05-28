@@ -2,6 +2,7 @@ name: "install-nix-action test"
 on:
   pull_request:
   push:
+
 jobs:
   simple-build:
     strategy:
@@ -19,6 +20,7 @@ jobs:
     # cachix should be available and be able to configure a cache
     - run: cachix use cachix
     - run: nix-build test.nix
+
   no-channel:
     strategy:
       matrix:
@@ -34,3 +36,19 @@ jobs:
         skip_adding_nixpkgs_channel: true
     - run: nix-build test.nix && exit 1 || echo "OK"
     - run: NIX_PATH=nixpkgs=https://github.com/NixOS/nixpkgs/tarball/ab5863afada3c1b50fc43bf774b75ea71b287cde nix-build test.nix
+
+  custom-nix-path:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2
+    - run: yarn install --frozen-lockfile
+    - run: yarn build
+    - name: Install Nix
+      uses: ./
+      with:
+        nix_path: nixpkgs=channel:nixos-20.03
+    - run: test $NIX_PATH == "nixpkgs=channel:nixos-20.03"
+    - run: nix-build test.nix

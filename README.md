@@ -19,6 +19,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: cachix/install-nix-action@v9
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
     - run: nix-build
 ```
 
@@ -28,7 +30,9 @@ with developers.
 
 ## Options `with: ...`
 
-- `install_url`: specify URL to install Nix from (mostly useful for testing non-stable releases
+- `install_url`: specify URL to install Nix from (mostly useful for testing non-stable releases)
+
+- `nix_path`: set `NIX_PATH` environment variable (if set `skip_adding_nixpkgs_channel` will be implicitly enabled)
 
 - `skip_adding_nixpkgs_channel`: set to `true` to skip adding nixpkgs-unstable channel (and save ~5s for each job build)
 
