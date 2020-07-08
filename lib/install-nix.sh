@@ -13,7 +13,7 @@ else
   INPUT_NIX_PATH="/nix/var/nix/profiles/per-user/root/channels"
 fi
 
-sh <(curl -L ${INPUT_INSTALL_URL:-https://nixos.org/nix/install}) \
+sh <(curl --retry 5 --retry-connrefused -L ${INPUT_INSTALL_URL:-https://nixos.org/nix/install}) \
   --daemon --daemon-user-count 4 --nix-extra-conf-file /tmp/nix.conf --darwin-use-unencrypted-nix-store-volume $extra_cmd
 
 if [[ $OSTYPE =~ darwin ]]; then
