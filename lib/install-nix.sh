@@ -5,8 +5,9 @@ set -euo pipefail
 sudo sh -c 'echo max-jobs = auto >> /tmp/nix.conf'
 # Allow binary caches for runner user
 sudo sh -c 'echo trusted-users = root runner >> /tmp/nix.conf'
+# Append extra nix configuration if provided
 if [[ -n $INPUT_EXTRA_NIX_CONFIG ]]; then
-  echo "$INPUT_EXTRA_NIX_CONFIG" >> /tmp/nix.conf
+  echo "$INPUT_EXTRA_NIX_CONFIG" | sudo tee -a /tmp/nix.conf >/dev/null
 fi
 
 install_options=(
