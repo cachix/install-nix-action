@@ -5,16 +5,25 @@ set -euo pipefail
 sudo sh -c 'echo max-jobs = auto >> /tmp/nix.conf'
 # Allow binary caches for runner user
 sudo sh -c 'echo trusted-users = root runner >> /tmp/nix.conf'
+if [[ -n $INPUT_EXTRA_NIX_CONFIG ]]; then
+  echo "$INPUT_EXTRA_NIX_CONFIG" >> /tmp/nix.conf
+fi
 
-if [[ $INPUT_SKIP_ADDING_NIXPKGS_CHANNEL = "true" || $INPUT_NIX_PATH != "" ]]; then
-  extra_cmd=--no-channel-add
+install_options=(
+  --daemon
+  --daemon-user-count 4
+  --nix-extra-conf-file /tmp/nix.conf
+  --darwin-use-unencrypted-nix-store-volume
+)
+
+if [[ $INPUT_SKIP_ADDING_NIXPKGS_CHANNEL = "true" || -n $INPUT_NIX_PATH ]]; then
+  install_options+=(--no-channel-add)
 else
-  extra_cmd=
   INPUT_NIX_PATH="/nix/var/nix/profiles/per-user/root/channels"
 fi
 
-sh <(curl --retry 5 --retry-connrefused -L ${INPUT_INSTALL_URL:-https://nixos.org/nix/install}) \
-  --daemon --daemon-user-count 4 --nix-extra-conf-file /tmp/nix.conf --darwin-use-unencrypted-nix-store-volume $extra_cmd
+sh <(curl --retry 5 --retry-connrefused -L "${INPUT_INSTALL_URL:-https://nixos.org/nix/install}") \
+  "${install_options[@]}"
 
 if [[ $OSTYPE =~ darwin ]]; then
   # Disable spotlight indexing of /nix to speed up performance

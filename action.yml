@@ -8,6 +8,8 @@ inputs:
     description: 'Set NIX_PATH environment variable. If set "skip_adding_nixpkgs_channel" will be implicitly enabled'
   skip_adding_nixpkgs_channel:
     description: 'Skip adding nixpkgs-unstable channel'
+  extra_nix_config:
+    description: 'gets appended to `/etc/nix/nix.conf` if passed.'
 branding:
   color: 'blue'
   icon: 'sun'
