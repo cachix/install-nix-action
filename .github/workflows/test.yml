@@ -52,3 +52,20 @@ jobs:
         nix_path: nixpkgs=channel:nixos-20.03
     - run: test $NIX_PATH == "nixpkgs=channel:nixos-20.03"
     - run: nix-build test.nix
+
+  extra-nix-config:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2
+    - run: yarn install --frozen-lockfile
+    - run: yarn build
+    - name: Install Nix
+      uses: ./
+      with:
+        extra_nix_config: |
+          sandbox = relaxed
+    - run: cat /etc/nix/nix.conf
+    - run: nix-build test.nix --arg noChroot true

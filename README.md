@@ -35,6 +35,7 @@ with developers.
 - `nix_path`: set `NIX_PATH` environment variable (if set `skip_adding_nixpkgs_channel` will be implicitly enabled)
 
 - `skip_adding_nixpkgs_channel`: set to `true` to skip adding nixpkgs-unstable channel (and save ~5s for each job build)
+- `extra_nix_config`: gets appended to `/etc/nix/nix.conf` if passed.
 
 ---
 

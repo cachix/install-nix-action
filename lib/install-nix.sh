@@ -1,20 +1,35 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Configure Nix
+add_config() {
+  echo "$1" | sudo tee -a /tmp/nix.conf >/dev/null
+}
 # Set jobs to number of cores
-sudo sh -c 'echo max-jobs = auto >> /tmp/nix.conf'
+add_config "max-jobs = auto"
 # Allow binary caches for runner user
-sudo sh -c 'echo trusted-users = root runner >> /tmp/nix.conf'
+add_config "trusted-users = root runner"
+# Append extra nix configuration if provided
+if [[ $INPUT_EXTRA_NIX_CONFIG != "" ]]; then
+  add_config "$INPUT_EXTRA_NIX_CONFIG"
+fi
+
+# Nix installer flags
+installer_options=(
+  --daemon
+  --daemon-user-count 4
+  --darwin-use-unencrypted-nix-store-volume
+  --nix-extra-conf-file /tmp/nix.conf
+)
 
 if [[ $INPUT_SKIP_ADDING_NIXPKGS_CHANNEL = "true" || $INPUT_NIX_PATH != "" ]]; then
-  extra_cmd=--no-channel-add
+  installer_options+=(--no-channel-add)
 else
-  extra_cmd=
   INPUT_NIX_PATH="/nix/var/nix/profiles/per-user/root/channels"
 fi
 
-sh <(curl --retry 5 --retry-connrefused -L ${INPUT_INSTALL_URL:-https://nixos.org/nix/install}) \
-  --daemon --daemon-user-count 4 --nix-extra-conf-file /tmp/nix.conf --darwin-use-unencrypted-nix-store-volume $extra_cmd
+sh <(curl --retry 5 --retry-connrefused -L "${INPUT_INSTALL_URL:-https://nixos.org/nix/install}") \
+  "${installer_options[@]}"
 
 if [[ $OSTYPE =~ darwin ]]; then
   # Disable spotlight indexing of /nix to speed up performance
