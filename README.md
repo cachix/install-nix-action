@@ -80,6 +80,11 @@ jobs:
 
 [Currently GitHub Actions are not running on Azure instance types that support nested virtualization](https://github.com/actions/virtual-environments/issues/183#issuecomment-610723516).
 
+### How do I print nixpkgs version with the channel I have configured?
+
+
+```nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'```
+
 ## Hacking
 
 Install the dependencies
