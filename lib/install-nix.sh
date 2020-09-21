@@ -24,7 +24,7 @@ installer_options=(
 )
 
 # On self-hosted runners we don't need to install more than once
-if [ ! -d "/nix/store" ] 
+if [[ ! -d /nix/store ]] 
 then 
   sh <(curl --retry 5 --retry-connrefused -L "${INPUT_INSTALL_URL:-https://nixos.org/nix/install}") "${installer_options[@]}"
 fi
