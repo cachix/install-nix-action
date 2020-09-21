@@ -43,7 +43,7 @@ with developers.
 
 ## Usage with Flakes
 
-```
+```yaml
 name: "Test"
 on:
   pull_request:
