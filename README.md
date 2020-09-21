@@ -4,18 +4,18 @@
 
 Installs [Nix](https://nixos.org/nix/) on GitHub Actions for the supported platforms: Linux and macOS.
 
-By default it has no channels configured, you have to set `nix_path`
+By default it has no nixpkgs configured, you have to set `nix_path`
 by [picking a channel](https://status.nixos.org/)
 or [pin nixpkgs yourself](https://nix.dev/tutorials/towards-reproducibility-pinning-nixpkgs.html).
 
 # Features
 
 - Quick installation (~4s on Linux, ~20s on macOS)
-- Multi-User mode with sandboxing enabled on Linux
+- Multi-User installation (with sandboxing enabled only on Linux)
 - [Self-hosted github runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners) support
-- Allows specifying Nix installation URL
-- Allows specifying extra Nix configration options
-- Allows specifying `$NIX_PATH` and channels
+- Allows specifying Nix installation URL via `install_url`
+- Allows specifying extra Nix configration options via `extra_nix_config`
+- Allows specifying `$NIX_PATH` and channels via `nix_path`
 
 ## Usage
 
