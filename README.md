@@ -66,7 +66,7 @@ jobs:
 
 ## Inputs (specify using `with:`)
 
-- `install_url`: specify URL to install Nix from (useful for testing non-stable releases)
+- `install_url`: specify URL to install Nix from (useful for testing non-stable releases or pinning Nix for example https://releases.nixos.org/nix/nix-2.3.7/install)
 
 - `nix_path`: set `NIX_PATH` environment variable, for example `nixpkgs=channel:nixos-unstable`
 
