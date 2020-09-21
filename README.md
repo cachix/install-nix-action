@@ -4,6 +4,10 @@
 
 Installs [Nix](https://nixos.org/nix/) on GitHub Actions for the supported platforms: Linux and macOS.
 
+By default it has no channels configured, you have to set `nix_path`
+by [picking a channel](https://status.nixos.org/)
+or [pin nixpkgs yourself](https://nix.dev/tutorials/towards-reproducibility-pinning-nixpkgs.html).
+
 # Features
 
 - Quick installation (~4s on Linux, ~20s on macOS)
