@@ -2,6 +2,8 @@ name: "install-nix-action test"
 on:
   pull_request:
   push:
+    branches:
+      - master
 
 jobs:
   simple-build:
