@@ -7,8 +7,8 @@ add_config() {
 }
 # Set jobs to number of cores
 add_config "max-jobs = auto"
-# Allow binary caches for runner user
-add_config "trusted-users = root runner"
+# Allow binary caches for user
+add_config "trusted-users = root $USER"
 # Append extra nix configuration if provided
 if [[ $INPUT_EXTRA_NIX_CONFIG != "" ]]; then
   add_config "$INPUT_EXTRA_NIX_CONFIG"
@@ -18,18 +18,16 @@ fi
 installer_options=(
   --daemon
   --daemon-user-count 4
+  --no-channel-add
   --darwin-use-unencrypted-nix-store-volume
   --nix-extra-conf-file /tmp/nix.conf
 )
 
-if [[ $INPUT_SKIP_ADDING_NIXPKGS_CHANNEL = "true" || $INPUT_NIX_PATH != "" ]]; then
-  installer_options+=(--no-channel-add)
-else
-  INPUT_NIX_PATH="/nix/var/nix/profiles/per-user/root/channels"
+# On self-hosted runners we don't need to install more than once
+if [[ ! -d /nix/store ]] 
+then 
+  sh <(curl --retry 5 --retry-connrefused -L "${INPUT_INSTALL_URL:-https://nixos.org/nix/install}") "${installer_options[@]}"
 fi
-
-sh <(curl --retry 5 --retry-connrefused -L "${INPUT_INSTALL_URL:-https://nixos.org/nix/install}") \
-  "${installer_options[@]}"
 
 if [[ $OSTYPE =~ darwin ]]; then
   # Disable spotlight indexing of /nix to speed up performance
@@ -43,7 +41,7 @@ if [[ $OSTYPE =~ darwin ]]; then
 fi
 
 # Set paths
-echo "::add-path::/nix/var/nix/profiles/per-user/runner/profile/bin"
+echo "::add-path::/nix/var/nix/profiles/per-user/$USER/profile/bin"
 echo "::add-path::/nix/var/nix/profiles/default/bin"
 
 if [[ $INPUT_NIX_PATH != "" ]]; then
