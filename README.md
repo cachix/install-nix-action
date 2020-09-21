@@ -4,6 +4,15 @@
 
 Installs [Nix](https://nixos.org/nix/) on GitHub Actions for the supported platforms: Linux and macOS.
 
+# Features
+
+- Quick installation (~4s on Linux, ~20s on macOS)
+- Multi-User mode with sandboxing enabled on Linux
+- [Self-hosted github runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners) support
+- Allows specifying Nix installation URL
+- Allows specifying extra Nix configration options
+- Allows specifying `$NIX_PATH` and channels
+
 ## Usage
 
 Create `.github/workflows/test.yml` in your repo with the following contents:
@@ -28,14 +37,36 @@ See also [cachix-action](https://github.com/cachix/cachix-action) for
 simple binary cache setup to speed up your builds and share binaries
 with developers.
 
-## Options `with: ...`
+# Usage with Flakes
 
-- `install_url`: specify URL to install Nix from (mostly useful for testing non-stable releases)
+```
+name: "Test"
+on:
+  pull_request:
+  push:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+          # Nix Flakes doesn't work on shallow clones
+          fetch-depth: 0
+    - uses: cachix/install-nix-action@v11
+      with:
+        install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20200820_4d77513/install
+        extra_nix_config: |
+          experimental-features = nix-command flakes
+    - run: nix-build
+```
 
-- `nix_path`: set `NIX_PATH` environment variable (if set `skip_adding_nixpkgs_channel` will be implicitly enabled)
+## Inputs (specify using `with:`)
 
-- `skip_adding_nixpkgs_channel`: set to `true` to skip adding nixpkgs-unstable channel (and save ~5s for each job build)
-- `extra_nix_config`: gets appended to `/etc/nix/nix.conf` if passed.
+- `install_url`: specify URL to install Nix from (useful for testing non-stable releases)
+
+- `nix_path`: set `NIX_PATH` environment variable, for example `nixpkgs=channel:nixos-unstable`
+
+- `extra_nix_config`: append to `/etc/nix/nix.conf`
 
 ---
 
