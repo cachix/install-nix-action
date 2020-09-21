@@ -41,7 +41,7 @@ See also [cachix-action](https://github.com/cachix/cachix-action) for
 simple binary cache setup to speed up your builds and share binaries
 with developers.
 
-# Usage with Flakes
+## Usage with Flakes
 
 ```
 name: "Test"
