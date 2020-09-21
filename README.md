@@ -74,6 +74,12 @@ jobs:
 
 ---
 
+## FAQ
+
+### Is it possible to run NixOS tests / Qemu+KVM with GitHub Actions?
+
+[Currently GitHub Actions are not running on Azure instance types that support nested virtualization](https://github.com/actions/virtual-environments/issues/183#issuecomment-610723516).
+
 ## Hacking
 
 Install the dependencies
