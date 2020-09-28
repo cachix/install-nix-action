@@ -9,7 +9,7 @@ jobs:
   simple-build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-11.0]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
