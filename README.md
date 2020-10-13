@@ -6,7 +6,8 @@ Installs [Nix](https://nixos.org/nix/) on GitHub Actions for the supported platf
 
 By default it has no nixpkgs configured, you have to set `nix_path`
 by [picking a channel](https://status.nixos.org/)
-or [pin nixpkgs yourself](https://nix.dev/tutorials/towards-reproducibility-pinning-nixpkgs.html).
+or [pin nixpkgs yourself](https://nix.dev/reference/pinning-nixpkgs.html) 
+(see also [pinning tutorial](https://nix.dev/tutorials/towards-reproducibility-pinning-nixpkgs.html)).
 
 # Features
 
