@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if type -p nix &>/dev/null ; then
+  echo "Aborting: Nix is already installed at $(type -p nix)"
+  exit
+fi
+
 # Configure Nix
 add_config() {
   echo "$1" | sudo tee -a /tmp/nix.conf >/dev/null
