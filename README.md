@@ -17,6 +17,7 @@ or [pin nixpkgs yourself](https://nix.dev/reference/pinning-nixpkgs.html)
 - Allows specifying Nix installation URL via `install_url`
 - Allows specifying extra Nix configration options via `extra_nix_config`
 - Allows specifying `$NIX_PATH` and channels via `nix_path`
+- Share `/nix/store` between builds using [cachix-action](https://github.com/cachix/cachix-action) for simple binary cache setup to speed up your builds and share binaries with your team
 
 ## Usage
 
@@ -38,9 +39,6 @@ jobs:
     - run: nix-build
 ```
 
-See also [cachix-action](https://github.com/cachix/cachix-action) for
-simple binary cache setup to speed up your builds and share binaries
-with developers.
 
 ## Usage with Flakes
 
