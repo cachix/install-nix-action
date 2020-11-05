@@ -32,8 +32,8 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: cachix/install-nix-action@v11
+    - uses: actions/checkout@v2.3.4
+    - uses: cachix/install-nix-action@v12
       with:
         nix_path: nixpkgs=channel:nixos-unstable
     - run: nix-build
