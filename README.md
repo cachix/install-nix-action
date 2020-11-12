@@ -84,6 +84,18 @@ jobs:
 
 ```nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'```
 
+### How can I run NixOS tests?
+
+With the following inputs:
+
+```yaml
+    - uses: cachix/install-nix-action@vXX
+      with:
+        extra_nix_config: "system-features = nixos-test benchmark big-parallel kvm"
+```
+
+Note that there's no hardware acceleration on GitHub Actions.
+
 ## Hacking
 
 Install the dependencies
