@@ -79,7 +79,7 @@ jobs:
 
 [Currently GitHub Actions are not running on Azure instance types that support nested virtualization](https://github.com/actions/virtual-environments/issues/183#issuecomment-610723516).
 
-### How do I print nixpkgs version with the channel I have configured?
+### How do I print nixpkgs version I have configured?
 
 
 ```nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'```
@@ -95,6 +95,12 @@ With the following inputs:
 ```
 
 Note that there's no hardware acceleration on GitHub Actions.
+
+### How can I install packages via nix-env from the specified `nix_path`?
+
+```
+nix-env -i mypackage -f '<nixpkgs>'
+```
 
 ## Hacking
 
