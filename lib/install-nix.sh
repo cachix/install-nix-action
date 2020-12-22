@@ -40,15 +40,15 @@ if [[ $OSTYPE =~ darwin ]]; then
 
   # macOS needs certificates hints
   cert_file=/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt
-  echo "NIX_SSL_CERT_FILE=$cert_file" >> $GITHUB_ENV
+  echo "NIX_SSL_CERT_FILE=$cert_file" >> "$GITHUB_ENV"
   export NIX_SSL_CERT_FILE=$cert_file
   sudo launchctl setenv NIX_SSL_CERT_FILE "$cert_file"
 fi
 
 # Set paths
-echo "/nix/var/nix/profiles/per-user/$USER/profile/bin" >> $GITHUB_PATH
-echo "/nix/var/nix/profiles/default/bin" >> $GITHUB_PATH
+echo "/nix/var/nix/profiles/per-user/$USER/profile/bin" >> "$GITHUB_PATH"
+echo "/nix/var/nix/profiles/default/bin" >> "$GITHUB_PATH"
 
 if [[ $INPUT_NIX_PATH != "" ]]; then
-  echo "NIX_PATH=${INPUT_NIX_PATH}" >> $GITHUB_ENV
+  echo "NIX_PATH=${INPUT_NIX_PATH}" >> "$GITHUB_ENV"
 fi
