@@ -66,9 +66,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
-      with:
-        # Nix Flakes doesn't work on shallow clones
-        fetch-depth: 0
     - run: yarn install --frozen-lockfile
     - run: yarn build
     - name: Install Nix

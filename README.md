@@ -51,10 +51,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-          # Nix Flakes doesn't work on shallow clones
-          fetch-depth: 0
+    - uses: actions/checkout@v2.3.4
     - uses: cachix/install-nix-action@v12
       with:
         install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20201221_9fab14a/install
