@@ -57,7 +57,7 @@ jobs:
           fetch-depth: 0
     - uses: cachix/install-nix-action@v12
       with:
-        install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20201007_5257a25/install
+        install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20201221_9fab14a/install
         extra_nix_config: |
           experimental-features = nix-command flakes
     - run: nix-build
