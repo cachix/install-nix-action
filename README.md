@@ -35,7 +35,7 @@ jobs:
     - uses: actions/checkout@v2.3.4
     - uses: cachix/install-nix-action@v12
       with:
-        nix_path: nixpkgs=channel:nixos-unstable
+        nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz
     - run: nix-build
 ```
 
