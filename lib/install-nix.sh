@@ -28,7 +28,8 @@ installer_options=(
   --nix-extra-conf-file /tmp/nix.conf
 )
 if [[ $INPUT_INSTALL_OPTIONS != "" ]]; then
-  installer_options=("${installer_options[@]}" "${INPUT_INSTALL_OPTIONS[@]}")
+  IFS=' ' read -r -a extra_installer_options <<< $INPUT_INSTALL_OPTIONS
+  installer_options=("${extra_installer_options[@]}" "${installer_options[@]}")
 fi
 
 echo "installer options: ${installer_options[@]}"
