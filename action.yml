@@ -3,7 +3,9 @@ description: 'Installs Nix on GitHub Actions for the supported platforms: Linux 
 author: 'Domen Kožar'
 inputs:
   install_url:
-    description: 'Installation URL that will contain a script to install Nix'
+    description: 'Installation URL that will contain a script to install Nix.'
+  install_options:
+    description: 'Additional installer flags passed to the installer script.'
   nix_path:
     description: 'Set NIX_PATH environment variable.'
   extra_nix_config:

@@ -27,7 +27,11 @@ installer_options=(
   --darwin-use-unencrypted-nix-store-volume
   --nix-extra-conf-file /tmp/nix.conf
 )
+if [[ $INPUT_INSTALL_OPTIONS != "" ]]; then
+  installer_options=("${installer_options[@]}" "${INPUT_INSTALL_OPTIONS[@]}")
+fi
 
+echo "installer options: ${installer_options[@]}"
 # On self-hosted runners we don't need to install more than once
 if [[ ! -d /nix/store ]] 
 then 
