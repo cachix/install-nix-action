@@ -51,17 +51,17 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-          # Nix Flakes doesn't work on shallow clones
-          fetch-depth: 0
+    - uses: actions/checkout@v2.3.4
     - uses: cachix/install-nix-action@v12
       with:
-        install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20201221_9fab14a/install
+        install_url: https://nixos-nix-install-tests.cachix.org/serve/lb41az54kzk6j12p81br4bczary7m145/install
+        install_options: '--tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve'
         extra_nix_config: |
           experimental-features = nix-command flakes
     - run: nix-build
 ```
+
+To install Nix from any commit, go to [the corresponding installer_test action](https://github.com/NixOS/nix/runs/2219534360) and click on "Run cachix/install-nix-action@XX" step and expand the first line.
 
 ## Inputs (specify using `with:`)
 
@@ -74,10 +74,6 @@ jobs:
 ---
 
 ## FAQ
-
-### Is it possible to run NixOS tests / Qemu+KVM with GitHub Actions?
-
-[Currently GitHub Actions are not running on Azure instance types that support nested virtualization](https://github.com/actions/virtual-environments/issues/183#issuecomment-610723516).
 
 ### How do I print nixpkgs version I have configured?
 
@@ -94,7 +90,8 @@ With the following inputs:
         extra_nix_config: "system-features = nixos-test benchmark big-parallel kvm"
 ```
 
-Note that there's no hardware acceleration on GitHub Actions.
+
+[Note that there's no hardware acceleration on GitHub Actions.](https://github.com/actions/virtual-environments/issues/183#issuecomment-610723516).
 
 ### How can I install packages via nix-env from the specified `nix_path`?
 
