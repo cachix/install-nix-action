@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.4
-    - uses: cachix/install-nix-action@v12
+    - uses: cachix/install-nix-action@v13
       with:
         nix_path: nixpkgs=channel:nixos-unstable
     - run: nix-build
@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.4
-    - uses: cachix/install-nix-action@v12
+    - uses: cachix/install-nix-action@v13
       with:
         install_url: https://nixos-nix-install-tests.cachix.org/serve/lb41az54kzk6j12p81br4bczary7m145/install
         install_options: '--tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve'
