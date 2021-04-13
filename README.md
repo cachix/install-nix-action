@@ -110,7 +110,7 @@ should use their `extraPullNames` input like this:
 ```yaml
 - uses: cachix/cachix-action@vXX
    with:
-     name: terlar
+     name: mycache
      authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
      extraPullNames: nix-community
 ```
