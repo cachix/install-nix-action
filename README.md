@@ -78,18 +78,20 @@ To install Nix from any commit, go to [the corresponding installer_test action](
 ### How do I print nixpkgs version I have configured?
 
 
-```nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'```
+```yaml
+- name: Print nixpkgs version
+  run: nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
+```
 
 ### How can I run NixOS tests?
 
 With the following inputs:
 
 ```yaml
-    - uses: cachix/install-nix-action@vXX
-      with:
-        extra_nix_config: "system-features = nixos-test benchmark big-parallel kvm"
+- uses: cachix/install-nix-action@vXX
+  with:
+    extra_nix_config: "system-features = nixos-test benchmark big-parallel kvm"
 ```
-
 
 [Note that there's no hardware acceleration on GitHub Actions.](https://github.com/actions/virtual-environments/issues/183#issuecomment-610723516).
 
