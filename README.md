@@ -101,6 +101,31 @@ With the following inputs:
 nix-env -i mypackage -f '<nixpkgs>'
 ```
 
+### How do I add a binary cache?
+
+If the binary cache you want to add is hosted on [Cachix](https://cachix.org/) and you are
+using [cachix-action](https://github.com/cachix/cachix-action), you
+should use their `extraPullNames` input like this:
+
+```yaml
+- uses: cachix/cachix-action@vXX
+   with:
+     name: terlar
+     authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+     extraPullNames: nix-community
+```
+
+Otherwise, you can add any binary cache to nix.conf using
+install-nix-action's own `extra_nix_config` input:
+
+```yaml
+- uses: cachix/install-nix-action@vXX
+  with:
+    extra_nix_config: |
+      trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+      substituters = https://hydra.iohk.io https://cache.nixos.org/
+```
+
 ## Hacking
 
 Install the dependencies
