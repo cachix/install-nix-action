@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.4
-    - uses: cachix/install-nix-action@v12
+    - uses: cachix/install-nix-action@v13
       with:
         nix_path: nixpkgs=channel:nixos-unstable
     - run: nix-build
@@ -52,14 +52,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.4
-    - uses: cachix/install-nix-action@v12
+    - uses: cachix/install-nix-action@v13
       with:
-        install_url: https://nixos-nix-install-tests.cachix.org/serve/lb41az54kzk6j12p81br4bczary7m145/install
+        install_url: https://nixos-nix-install-tests.cachix.org/serve/i6laym9jw3wg9mw6ncyrk6gjx4l34vvx/install
         install_options: '--tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve'
         extra_nix_config: |
           experimental-features = nix-command flakes
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-    - run: nix-build
+    - run: nix build
+    - run: nix flake check
 ```
 
 To install Nix from any commit, go to [the corresponding installer_test action](https://github.com/NixOS/nix/runs/2219534360) and click on "Run cachix/install-nix-action@XX" step and expand the first line.
@@ -79,18 +80,20 @@ To install Nix from any commit, go to [the corresponding installer_test action](
 ### How do I print nixpkgs version I have configured?
 
 
-```nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'```
+```yaml
+- name: Print nixpkgs version
+  run: nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
+```
 
 ### How can I run NixOS tests?
 
 With the following inputs:
 
 ```yaml
-    - uses: cachix/install-nix-action@vXX
-      with:
-        extra_nix_config: "system-features = nixos-test benchmark big-parallel kvm"
+- uses: cachix/install-nix-action@vXX
+  with:
+    extra_nix_config: "system-features = nixos-test benchmark big-parallel kvm"
 ```
-
 
 [Note that there's no hardware acceleration on GitHub Actions.](https://github.com/actions/virtual-environments/issues/183#issuecomment-610723516).
 
@@ -98,6 +101,31 @@ With the following inputs:
 
 ```
 nix-env -i mypackage -f '<nixpkgs>'
+```
+
+### How do I add a binary cache?
+
+If the binary cache you want to add is hosted on [Cachix](https://cachix.org/) and you are
+using [cachix-action](https://github.com/cachix/cachix-action), you
+should use their `extraPullNames` input like this:
+
+```yaml
+- uses: cachix/cachix-action@vXX
+   with:
+     name: mycache
+     authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+     extraPullNames: nix-community
+```
+
+Otherwise, you can add any binary cache to nix.conf using
+install-nix-action's own `extra_nix_config` input:
+
+```yaml
+- uses: cachix/install-nix-action@vXX
+  with:
+    extra_nix_config: |
+      trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+      substituters = https://hydra.iohk.io https://cache.nixos.org/
 ```
 
 ## Hacking

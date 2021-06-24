@@ -71,7 +71,7 @@ jobs:
     - name: Install Nix
       uses: ./
       with:
-        install_url: https://nixos-nix-install-tests.cachix.org/serve/lb41az54kzk6j12p81br4bczary7m145/install
+        install_url: https://nixos-nix-install-tests.cachix.org/serve/i6laym9jw3wg9mw6ncyrk6gjx4l34vvx/install
         install_options: '--tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve'
         extra_nix_config: |
           experimental-features = nix-command flakes
@@ -90,7 +90,7 @@ jobs:
     - name: Install Nix
       uses: ./
       with: 
-        nix_path: nixpkgs=channel:nixos-20.03
-        install_url: https://nixos-nix-install-tests.cachix.org/serve/lb41az54kzk6j12p81br4bczary7m145/install
+        nix_path: nixpkgs=channel:nixos-21.05
+        install_url: https://nixos-nix-install-tests.cachix.org/serve/i6laym9jw3wg9mw6ncyrk6gjx4l34vvx/install
         install_options: '--tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve'
     - run: nix-build test.nix
