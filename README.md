@@ -58,6 +58,7 @@ jobs:
         install_options: '--tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve'
         extra_nix_config: |
           experimental-features = nix-command flakes
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
     - run: nix build
     - run: nix flake check
 ```
