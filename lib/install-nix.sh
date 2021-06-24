@@ -8,7 +8,7 @@ fi
 
 # Configure Nix
 add_config() {
-  echo "$1" | sudo tee -a /tmp/nix.conf >/dev/null
+  echo "$1" | tee -a /tmp/nix.conf >/dev/null
 }
 # Set jobs to number of cores
 add_config "max-jobs = auto"
