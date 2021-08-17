@@ -33,11 +33,7 @@ if [[ $INPUT_INSTALL_OPTIONS != "" ]]; then
 fi
 
 echo "installer options: ${installer_options[@]}"
-# On self-hosted runners we don't need to install more than once
-if [[ ! -d /nix/store ]] 
-then 
-  sh <(curl --retry 5 --retry-connrefused -L "${INPUT_INSTALL_URL:-https://nixos.org/nix/install}") "${installer_options[@]}"
-fi
+sh <(curl --retry 5 --retry-connrefused -L "${INPUT_INSTALL_URL:-https://nixos.org/nix/install}") "${installer_options[@]}"
 
 if [[ $OSTYPE =~ darwin ]]; then
   # Disable spotlight indexing of /nix to speed up performance
