@@ -26,8 +26,8 @@ installer_options=(
   --nix-extra-conf-file /tmp/nix.conf
 )
 
-# only use the nix-daemon if systemd is supported
-if [[ -e /run/systemd/system ]]; then
+# only use the nix-daemon settings if on darwin (which get ignored) or systemd is supported
+if [[ $OSTYPE =~ darwin || -e /run/systemd/system ]]; then
   installer_options+=(
     --daemon
     --daemon-user-count 4
