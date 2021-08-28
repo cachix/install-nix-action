@@ -21,12 +21,24 @@ fi
 
 # Nix installer flags
 installer_options=(
-  --daemon
-  --daemon-user-count 4
   --no-channel-add
   --darwin-use-unencrypted-nix-store-volume
   --nix-extra-conf-file /tmp/nix.conf
 )
+
+# only use the nix-daemon settings if on darwin (which get ignored) or systemd is supported
+if [[ $OSTYPE =~ darwin || -e /run/systemd/system ]]; then
+  installer_options+=(
+    --daemon
+    --daemon-user-count 4
+  )
+else
+  # "fix" the following error when running nix*
+  # error: the group 'nixbld' specified in 'build-users-group' does not exist
+  mkdir -m 0755 /etc/nix
+  echo "build-users-group =" > /etc/nix/nix.conf
+fi
+
 if [[ $INPUT_INSTALL_OPTIONS != "" ]]; then
   IFS=' ' read -r -a extra_installer_options <<< $INPUT_INSTALL_OPTIONS
   installer_options=("${extra_installer_options[@]}" "${installer_options[@]}")
