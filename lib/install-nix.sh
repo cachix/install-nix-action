@@ -22,7 +22,7 @@ fi
 # Nix installer flags
 installer_options=(
   --daemon
-  --daemon-user-count 4
+  --daemon-user-count `nproc`
   --no-channel-add
   --darwin-use-unencrypted-nix-store-volume
   --nix-extra-conf-file /tmp/nix.conf
