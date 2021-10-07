@@ -48,9 +48,6 @@ echo "installer options: ${installer_options[@]}"
 sh <(curl --retry 5 --retry-connrefused -L "${INPUT_INSTALL_URL:-https://nixos.org/nix/install}") "${installer_options[@]}"
 
 if [[ $OSTYPE =~ darwin ]]; then
-  # Disable spotlight indexing of /nix to speed up performance
-  sudo mdutil -i off /nix
-
   # macOS needs certificates hints
   cert_file=/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt
   echo "NIX_SSL_CERT_FILE=$cert_file" >> "$GITHUB_ENV"
