@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+profileEnv=$HOME/.nix-profile/etc/profile.d/nix.sh
+
+# if Nix profile already exists, source the environment. This is mostly useful for self-hosted runners, see issue #98
+if [[ -f $profileEnv ]]; then
+  source $profileEnv
+fi
+
 if type -p nix &>/dev/null ; then
   echo "Aborting: Nix is already installed at $(type -p nix)"
   exit
