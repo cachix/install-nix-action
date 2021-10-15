@@ -14,7 +14,7 @@ or [pin nixpkgs yourself](https://nix.dev/reference/pinning-nixpkgs.html)
 - Quick installation (~4s on Linux, ~20s on macOS)
 - Multi-User installation (with sandboxing enabled only on Linux)
 - [Self-hosted github runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners) support
-- Allows specifying Nix installation URL via `install_url`
+- Allows specifying Nix installation URL via `install_url` (the oldest supported Nix version is 2.3.5)
 - Allows specifying extra Nix configration options via `extra_nix_config`
 - Allows specifying `$NIX_PATH` and channels via `nix_path`
 - Share `/nix/store` between builds using [cachix-action](https://github.com/cachix/cachix-action) for simple binary cache setup to speed up your builds and share binaries with your team
