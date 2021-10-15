@@ -58,7 +58,7 @@ if [[ $OSTYPE =~ darwin ]]; then
   sudo launchctl setenv NIX_SSL_CERT_FILE "$cert_file"
 fi
 
-# Set paths early (ephemeral self-hosted runners might reuse a runner)
+# Set paths
 echo "/nix/var/nix/profiles/per-user/$USER/profile/bin" >> "$GITHUB_PATH"
 echo "/nix/var/nix/profiles/default/bin" >> "$GITHUB_PATH"
 
