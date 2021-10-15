@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-profileEnv=$HOME/.nix-profile/etc/profile.d/nix.sh
-
-# if Nix profile already exists, source the environment. This is mostly useful for self-hosted runners, see issue #98
-if [[ -f $profileEnv ]]; then
-  source $profileEnv
-fi
+# Set paths early (ephemeral self-hosted runners might reuse a runner)
+echo "/nix/var/nix/profiles/per-user/$USER/profile/bin" >> "$GITHUB_PATH"
+echo "/nix/var/nix/profiles/default/bin" >> "$GITHUB_PATH"
 
 if type -p nix &>/dev/null ; then
   echo "Aborting: Nix is already installed at $(type -p nix)"
@@ -62,9 +59,6 @@ if [[ $OSTYPE =~ darwin ]]; then
   sudo launchctl setenv NIX_SSL_CERT_FILE "$cert_file"
 fi
 
-# Set paths
-echo "/nix/var/nix/profiles/per-user/$USER/profile/bin" >> "$GITHUB_PATH"
-echo "/nix/var/nix/profiles/default/bin" >> "$GITHUB_PATH"
 
 if [[ $INPUT_NIX_PATH != "" ]]; then
   echo "NIX_PATH=${INPUT_NIX_PATH}" >> "$GITHUB_ENV"
