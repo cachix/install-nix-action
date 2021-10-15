@@ -2,8 +2,7 @@
 set -euo pipefail
 
 # Set paths early (ephemeral self-hosted runners might reuse a runner)
-echo "/nix/var/nix/profiles/per-user/$USER/profile/bin" >> "$GITHUB_PATH"
-echo "/nix/var/nix/profiles/default/bin" >> "$GITHUB_PATH"
+PATH="/nix/var/nix/profiles/per-user/$USER/profile/bin":"/nix/var/nix/profiles/default/bin":$PATH
 
 if type -p nix &>/dev/null ; then
   echo "Aborting: Nix is already installed at $(type -p nix)"
@@ -58,6 +57,10 @@ if [[ $OSTYPE =~ darwin ]]; then
   export NIX_SSL_CERT_FILE=$cert_file
   sudo launchctl setenv NIX_SSL_CERT_FILE "$cert_file"
 fi
+
+# Set paths early (ephemeral self-hosted runners might reuse a runner)
+echo "/nix/var/nix/profiles/per-user/$USER/profile/bin" >> "$GITHUB_PATH"
+echo "/nix/var/nix/profiles/default/bin" >> "$GITHUB_PATH"
 
 
 if [[ $INPUT_NIX_PATH != "" ]]; then
