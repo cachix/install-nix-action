@@ -45,7 +45,15 @@ if [[ $INPUT_INSTALL_OPTIONS != "" ]]; then
 fi
 
 echo "installer options: ${installer_options[@]}"
-sh <(curl --retry 5 --retry-connrefused -L "${INPUT_INSTALL_URL:-https://nixos.org/nix/install}") "${installer_options[@]}"
+
+# There is --retry-on-errors, but only newer curl versions support that
+until curl -o /tmp/install -v --fail --retry 5 --retry-connrefused -L "${INPUT_INSTALL_URL:-https://nixos.org/nix/install}" 
+do
+  sleep 1
+done
+
+chmod +x /tmp/install
+sh /tmp/install "${installer_options[@]}"
 
 if [[ $OSTYPE =~ darwin ]]; then
   # macOS needs certificates hints
