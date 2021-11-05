@@ -18,6 +18,9 @@ add_config "trusted-users = root $USER"
 if [[ $INPUT_EXTRA_NIX_CONFIG != "" ]]; then
   add_config "$INPUT_EXTRA_NIX_CONFIG"
 fi
+if [[ ! $INPUT_EXTRA_NIX_CONFIG =~ "experimental-features" ]]; then  
+  add_config "experimental-features = nix-command flakes"
+fi
 
 # Nix installer flags
 installer_options=(
