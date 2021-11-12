@@ -33,8 +33,8 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2.3.4
-    - uses: cachix/install-nix-action@v14.1
+    - uses: actions/checkout@v2.4.0
+    - uses: cachix/install-nix-action@v15
       with:
         nix_path: nixpkgs=channel:nixos-unstable
     - run: nix-build
@@ -52,8 +52,8 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2.3.4
-    - uses: cachix/install-nix-action@v14.1
+    - uses: actions/checkout@v2.5.0
+    - uses: cachix/install-nix-action@v15
       with:
         install_url: https://nixos-nix-install-tests.cachix.org/serve/vij683ly7sl95nnhb67bdjjfabclr85m/install
         install_options: '--tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve'
