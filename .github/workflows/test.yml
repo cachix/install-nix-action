@@ -109,3 +109,14 @@ jobs:
         nix_path: nixpkgs=channel:nixos-21.05
         install_url: https://releases.nixos.org/nix/nix-2.3.5/install
     - run: nix-build test.nix
+
+  act-support: 
+    strategy:
+        matrix:
+          os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - name: Setup act
+      uses: actionsflow/setup-act-for-actionsflow@v1
+    - run: act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:full-20.04 push -j simple-build
