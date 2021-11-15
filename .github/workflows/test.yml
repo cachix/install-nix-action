@@ -117,6 +117,5 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2.4.0
-    - name: Setup act
-      uses: actionsflow/setup-act-for-actionsflow@v1
-    - run: act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:full-20.04 push -j simple-build
+    - run: go install github.com/nektos/act@latest
+    - run: ~/go/bin/act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:full-20.04 push -j simple-build 
