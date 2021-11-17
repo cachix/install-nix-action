@@ -6,9 +6,13 @@ if type -p nix &>/dev/null ; then
   exit
 fi
 
+# Create a temporary workdir
+workdir=$(mktemp -d)
+trap 'rm -rf "$workdir"' EXIT
+
 # Configure Nix
 add_config() {
-  echo "$1" | tee -a /tmp/nix.conf >/dev/null
+  echo "$1" | tee -a "$workdir/nix.conf" >/dev/null
 }
 # Set jobs to number of cores
 add_config "max-jobs = auto"
@@ -18,7 +22,7 @@ add_config "trusted-users = root $USER"
 if [[ $INPUT_EXTRA_NIX_CONFIG != "" ]]; then
   add_config "$INPUT_EXTRA_NIX_CONFIG"
 fi
-if [[ ! $INPUT_EXTRA_NIX_CONFIG =~ "experimental-features" ]]; then  
+if [[ ! $INPUT_EXTRA_NIX_CONFIG =~ "experimental-features" ]]; then
   add_config "experimental-features = nix-command flakes"
 fi
 
@@ -26,7 +30,7 @@ fi
 installer_options=(
   --no-channel-add
   --darwin-use-unencrypted-nix-store-volume
-  --nix-extra-conf-file /tmp/nix.conf
+  --nix-extra-conf-file "$workdir/nix.conf"
 )
 
 # only use the nix-daemon settings if on darwin (which get ignored) or systemd is supported
@@ -49,13 +53,13 @@ fi
 echo "installer options: ${installer_options[@]}"
 
 # There is --retry-on-errors, but only newer curl versions support that
-until curl -o /tmp/install -v --fail --retry 5 --retry-connrefused -L "${INPUT_INSTALL_URL:-https://nixos.org/nix/install}" 
+until curl -o "$workdir/install" -v --fail --retry 5 --retry-connrefused -L "${INPUT_INSTALL_URL:-https://nixos.org/nix/install}"
 do
   sleep 1
 done
 
-chmod +x /tmp/install
-sh /tmp/install "${installer_options[@]}"
+chmod +x "$workdir/install"
+sh "$workdir/install" "${installer_options[@]}"
 
 if [[ $OSTYPE =~ darwin ]]; then
   # macOS needs certificates hints
