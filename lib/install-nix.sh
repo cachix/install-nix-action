@@ -37,7 +37,7 @@ installer_options=(
 if [[ $OSTYPE =~ darwin || -e /run/systemd/system ]]; then
   installer_options+=(
     --daemon
-    --daemon-user-count `python -c 'import multiprocessing as mp; print(mp.cpu_count() * 2)'`
+    --daemon-user-count "$(python -c 'import multiprocessing as mp; print(mp.cpu_count() * 2)')"
   )
 else
   # "fix" the following error when running nix*
@@ -46,11 +46,11 @@ else
 fi
 
 if [[ $INPUT_INSTALL_OPTIONS != "" ]]; then
-  IFS=' ' read -r -a extra_installer_options <<< $INPUT_INSTALL_OPTIONS
+  IFS=' ' read -r -a extra_installer_options <<< "$INPUT_INSTALL_OPTIONS"
   installer_options=("${extra_installer_options[@]}" "${installer_options[@]}")
 fi
 
-echo "installer options: ${installer_options[@]}"
+echo "installer options: ${installer_options[*]}"
 
 # There is --retry-on-errors, but only newer curl versions support that
 until curl -o "$workdir/install" -v --fail --retry 5 --retry-connrefused -L "${INPUT_INSTALL_URL:-https://nixos.org/nix/install}"
