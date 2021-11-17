@@ -53,9 +53,15 @@ fi
 echo "installer options: ${installer_options[*]}"
 
 # There is --retry-on-errors, but only newer curl versions support that
-until curl -o "$workdir/install" -v --fail --retry 5 --retry-connrefused -L "${INPUT_INSTALL_URL:-https://nixos.org/nix/install}"
+curl_retries=5
+while ! curl -o "$workdir/install" -v --fail -L "${INPUT_INSTALL_URL:-https://nixos.org/nix/install}"
 do
   sleep 1
+  ((curl_retries--))
+  if [[ $curl_retries -le 0 ]]; then
+    echo "curl retries failed" >&2
+    exit 1
+  fi
 done
 
 sh "$workdir/install" "${installer_options[@]}"
