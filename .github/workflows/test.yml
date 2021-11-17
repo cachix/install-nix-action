@@ -120,6 +120,6 @@ jobs:
     - uses: actions/setup-go@v2.1.4
       with:
         go-version: '^1.16'
-    - run: go install github.com/nektos/act@latest
-    - run: docker pull ghcr.io/catthehacker/ubuntu:full-20.04
-    - run: ~/go/bin/act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:full-20.04 push -j simple-build 
+    - run: go install github.com/nektos/act@master
+    - run: docker pull ghcr.io/catthehacker/ubuntu:js-20.04
+    - run: ~/go/bin/act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:js-20.04 push -j simple-build 
