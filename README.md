@@ -52,7 +52,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2.5.0
+    - uses: actions/checkout@v2.4.0
     - uses: cachix/install-nix-action@v15
       with:
         install_url: https://nixos-nix-install-tests.cachix.org/serve/vij683ly7sl95nnhb67bdjjfabclr85m/install
