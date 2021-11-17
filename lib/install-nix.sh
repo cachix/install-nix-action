@@ -58,7 +58,6 @@ do
   sleep 1
 done
 
-chmod +x "$workdir/install"
 sh "$workdir/install" "${installer_options[@]}"
 
 if [[ $OSTYPE =~ darwin ]]; then
