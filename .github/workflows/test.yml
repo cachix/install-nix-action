@@ -109,3 +109,17 @@ jobs:
         nix_path: nixpkgs=channel:nixos-21.05
         install_url: https://releases.nixos.org/nix/nix-2.3.5/install
     - run: nix-build test.nix
+
+  act-support: 
+    strategy:
+        matrix:
+          os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - uses: actions/setup-go@v2.1.4
+      with:
+        go-version: '^1.16'
+    - run: go install github.com/nektos/act@master
+    - run: docker pull ghcr.io/catthehacker/ubuntu:js-20.04
+    - run: ~/go/bin/act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:js-20.04 push -j simple-build 
