@@ -18,7 +18,7 @@ or [pin nixpkgs yourself](https://nix.dev/reference/pinning-nixpkgs.html)
 - Allows specifying extra Nix configration options via `extra_nix_config`
 - Allows specifying `$NIX_PATH` and channels via `nix_path`
 - Share `/nix/store` between builds using [cachix-action](https://github.com/cachix/cachix-action) for simple binary cache setup to speed up your builds and share binaries with your team
-- Enables `flakes` and `nix-command` experimental features by default (to disable, set ``experimental-features` via `extra_nix_config`) 
+- Enables `flakes` and `nix-command` experimental features by default (to disable, set ``experimental-features`` via ``extra_nix_config``) 
 
 ## Usage
 
