@@ -43,7 +43,8 @@ else
   # "fix" the following error when running nix*
   # error: the group 'nixbld' specified in 'build-users-group' does not exist
   add_config "build-users-group ="
-  mkdir -m 0755 /etc/nix
+  sudo mkdir -p /etc/nix
+  sudo chmod 0755 /etc/nix
   cp $workdir/nix.conf /etc/nix/nix.conf
 fi
 
