@@ -78,8 +78,8 @@ if [[ $OSTYPE =~ darwin ]]; then
 fi
 
 # Set paths
-echo "/nix/var/nix/profiles/per-user/$USER/profile/bin" >> "$GITHUB_PATH"
 echo "/nix/var/nix/profiles/default/bin" >> "$GITHUB_PATH"
+echo "/nix/var/nix/profiles/per-user/$USER/profile/bin" >> "$GITHUB_PATH"
 
 if [[ $INPUT_NIX_PATH != "" ]]; then
   echo "NIX_PATH=${INPUT_NIX_PATH}" >> "$GITHUB_ENV"
