@@ -14,5 +14,12 @@ branding:
   color: 'blue'
   icon: 'sun'
 runs:
-  using: 'node12'
-  main: 'lib/main.js'
+  using: 'composite'
+  steps:
+    - run : ${{ github.action_path }}/install-nix.sh
+      shell: bash
+      env:
+        INPUT_INSTALL_URL: ${{ inputs.install_url }}
+        INPUT_INSTALL_OPTIONS: ${{ inputs.install_options }}
+        INPUT_NIX_PATH: ${{ inputs.nix_path }}
+        INPUT_EXTRA_NIX_CONFIG: ${{ inputs.extra_nix_config }}
