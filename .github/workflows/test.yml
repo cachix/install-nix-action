@@ -13,8 +13,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-    - run: yarn install --frozen-lockfile
-    - run: yarn build
     - name: Install Nix
       uses: ./
       with:
@@ -24,7 +22,6 @@ jobs:
     # cachix should be available and be able to configure a cache
     - run: cachix use cachix
     - run: nix-build test.nix
-
   custom-nix-path:
     strategy:
       matrix:
@@ -32,8 +29,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-    - run: yarn install --frozen-lockfile
-    - run: yarn build
     - name: Install Nix
       uses: ./
       with:
@@ -48,8 +43,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-    - run: yarn install --frozen-lockfile
-    - run: yarn build
     - name: Install Nix
       uses: ./
       with:
@@ -66,8 +59,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-    - run: yarn install --frozen-lockfile
-    - run: yarn build
     - name: Install Nix
       uses: ./
       with:
@@ -84,8 +75,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-    - run: yarn install --frozen-lockfile
-    - run: yarn build
     - name: Install Nix
       uses: ./
       with:
@@ -101,8 +90,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-    - run: yarn install --frozen-lockfile
-    - run: yarn build
     - name: Install Nix
       uses: ./
       with:
