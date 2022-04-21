@@ -37,7 +37,7 @@ installer_options=(
 )
 
 # only use the nix-daemon settings if on darwin (which get ignored) or systemd is supported
-if [[ $OSTYPE =~ darwin || -e /run/systemd/system ]]; then
+if [[ $OSTYPE =~ darwin || -e /run/systemd/system && $INPUT_SINGLE_USER == "true" ]]; then
   installer_options+=(
     --daemon
     --daemon-user-count "$(python3 -c 'import multiprocessing as mp; print(mp.cpu_count() * 2)')"
