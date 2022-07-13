@@ -6,6 +6,9 @@ if type -p nix &>/dev/null ; then
   exit
 fi
 
+# GitHub command to put the following log messages into a group which is collapsed by default
+echo "::group::Installing Nix"
+
 # Create a temporary workdir
 workdir=$(mktemp -d)
 trap 'rm -rf "$workdir"' EXIT
@@ -84,3 +87,6 @@ echo "/nix/var/nix/profiles/per-user/$USER/profile/bin" >> "$GITHUB_PATH"
 if [[ $INPUT_NIX_PATH != "" ]]; then
   echo "NIX_PATH=${INPUT_NIX_PATH}" >> "$GITHUB_ENV"
 fi
+
+# Close the log message group which was opened above
+echo "::endgroup::"
