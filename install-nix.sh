@@ -40,7 +40,7 @@ installer_options=(
 if [[ $OSTYPE =~ darwin || -e /run/systemd/system ]]; then
   installer_options+=(
     --daemon
-    --daemon-user-count "$(python -c 'import multiprocessing as mp; print(mp.cpu_count() * 2)')"
+    --daemon-user-count "$(python3 -c 'import multiprocessing as mp; print(mp.cpu_count() * 2)')"
   )
 else
   # "fix" the following error when running nix*
