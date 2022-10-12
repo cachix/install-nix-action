@@ -104,9 +104,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-go@v3
-      with:
-        go-version: '^1.16'
-    - run: go install github.com/nektos/act@latest
+    - run: curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
     - run: docker pull ghcr.io/catthehacker/ubuntu:js-20.04
-    - run: ~/go/bin/act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:js-20.04 push -j simple-build
+    - run: ./bin/act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:js-20.04 push -j simple-build
