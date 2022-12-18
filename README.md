@@ -1,5 +1,6 @@
 # install-nix-action
 
+check 
 ![github actions badge](https://github.com/cachix/install-nix-action/workflows/install-nix-action%20test/badge.svg)
 
 Installs [Nix](https://nixos.org/nix/) on GitHub Actions for the supported platforms: Linux and macOS.
