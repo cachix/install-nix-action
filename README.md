@@ -55,8 +55,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v18
       with:
-        extra_nix_config: |
-          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+        github_access_token: ${{ secrets.GITHUB_TOKEN }}
     - run: nix build
     - run: nix flake check
 ```
@@ -65,11 +64,15 @@ To install Nix from any commit, go to [the corresponding installer_test action](
 
 ## Inputs (specify using `with:`)
 
+- `extra_nix_config`: append to `/etc/nix/nix.conf`
+
+- `github_access_token`: configure nix to pull from github using the given github token. This helps work around rate limit issues.
+
 - `install_url`: specify URL to install Nix from (useful for testing non-stable releases or pinning Nix for example https://releases.nixos.org/nix/nix-2.3.7/install)
 
-- `nix_path`: set `NIX_PATH` environment variable, for example `nixpkgs=channel:nixos-unstable`
+- `install_options`: Additional installer flags passed to the installer script.
 
-- `extra_nix_config`: append to `/etc/nix/nix.conf`
+- `nix_path`: set `NIX_PATH` environment variable, for example `nixpkgs=channel:nixos-unstable`
 
 ---
 
