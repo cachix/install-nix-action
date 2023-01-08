@@ -23,7 +23,7 @@ add_config "max-jobs = auto"
 add_config "trusted-users = root $USER"
 # Add github access token
 if [[ $INPUT_GITHUB_ACCESS_TOKEN != "" ]]; then
-  add_config "access-tokens" "github.com=$INPUT_GITHUB_ACCESS_TOKEN"
+  add_config "access-tokens = github.com=$INPUT_GITHUB_ACCESS_TOKEN"
 fi
 # Append extra nix configuration if provided
 if [[ $INPUT_EXTRA_NIX_CONFIG != "" ]]; then
