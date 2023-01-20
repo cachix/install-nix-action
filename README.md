@@ -1,24 +1,24 @@
 # install-nix-action
 
-![github actions badge](https://github.com/cachix/install-nix-action/workflows/install-nix-action%20test/badge.svg)
+![GitHub Actions badge](https://github.com/cachix/install-nix-action/workflows/install-nix-action%20test/badge.svg)
 
 Installs [Nix](https://nixos.org/nix/) on GitHub Actions for the supported platforms: Linux and macOS.
 
 By default it has no nixpkgs configured, you have to set `nix_path`
 by [picking a channel](https://status.nixos.org/)
-or [pin nixpkgs yourself](https://nix.dev/reference/pinning-nixpkgs.html) 
+or [pin nixpkgs yourself](https://nix.dev/reference/pinning-nixpkgs.html)
 (see also [pinning tutorial](https://nix.dev/tutorials/towards-reproducibility-pinning-nixpkgs.html)).
 
 # Features
 
 - Quick installation (~4s on Linux, ~20s on macOS)
 - Multi-User installation (with sandboxing enabled only on Linux)
-- [Self-hosted github runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners) support
+- [Self-hosted GitHub runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners) support
 - Allows specifying Nix installation URL via `install_url` (the oldest supported Nix version is 2.3.5)
-- Allows specifying extra Nix configration options via `extra_nix_config`
+- Allows specifying extra Nix configuration options via `extra_nix_config`
 - Allows specifying `$NIX_PATH` and channels via `nix_path`
 - Share `/nix/store` between builds using [cachix-action](https://github.com/cachix/cachix-action) for simple binary cache setup to speed up your builds and share binaries with your team
-- Enables `flakes` and `nix-command` experimental features by default (to disable, set ``experimental-features`` via ``extra_nix_config``) 
+- Enables `flakes` and `nix-command` experimental features by default (to disable, set `experimental-features` via `extra_nix_config`)
 
 ## Usage
 
@@ -39,7 +39,6 @@ jobs:
         nix_path: nixpkgs=channel:nixos-unstable
     - run: nix-build
 ```
-
 
 ## Usage with Flakes
 
@@ -66,11 +65,11 @@ To install Nix from any commit, go to [the corresponding installer_test action](
 
 - `extra_nix_config`: append to `/etc/nix/nix.conf`
 
-- `github_access_token`: configure nix to pull from github using the given github token. This helps work around rate limit issues.
+- `github_access_token`: configure Nix to pull from GitHub using the given GitHub token. This helps work around rate limit issues. Has no effect when `access-tokens` is also specified in `extra_nix_config`.
 
-- `install_url`: specify URL to install Nix from (useful for testing non-stable releases or pinning Nix for example https://releases.nixos.org/nix/nix-2.3.7/install)
+- `install_url`: specify URL to install Nix from (useful for testing non-stable releases or pinning Nix, for example https://releases.nixos.org/nix/nix-2.3.7/install)
 
-- `install_options`: Additional installer flags passed to the installer script.
+- `install_options`: additional installer flags passed to the installer script.
 
 - `nix_path`: set `NIX_PATH` environment variable, for example `nixpkgs=channel:nixos-unstable`
 
@@ -79,7 +78,6 @@ To install Nix from any commit, go to [the corresponding installer_test action](
 ## FAQ
 
 ### How do I print nixpkgs version I have configured?
-
 
 ```yaml
 - name: Print nixpkgs version
@@ -132,16 +130,19 @@ install-nix-action's own `extra_nix_config` input:
 ## Hacking
 
 Install the dependencies
+
 ```bash
 $ yarn install
 ```
 
 Build the typescript
+
 ```bash
 $ yarn build
 ```
 
 Run the tests :heavy_check_mark:
+
 ```bash
 $ yarn test
 ```
