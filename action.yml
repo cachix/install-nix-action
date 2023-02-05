@@ -26,3 +26,4 @@ runs:
         INPUT_INSTALL_OPTIONS: ${{ inputs.install_options }}
         INPUT_INSTALL_URL: ${{ inputs.install_url }}
         INPUT_NIX_PATH: ${{ inputs.nix_path }}
+        GITHUB_TOKEN: ${{ github.token }}
