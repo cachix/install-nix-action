@@ -22,8 +22,10 @@ add_config "max-jobs = auto"
 # Allow binary caches for user
 add_config "trusted-users = root $USER"
 # Add github access token
-if [[ $INPUT_GITHUB_ACCESS_TOKEN != "" ]]; then
+if [[ -n "${INPUT_GITHUB_ACCESS_TOKEN:-}" ]]; then
   add_config "access-tokens = github.com=$INPUT_GITHUB_ACCESS_TOKEN"
+elif [[ -n "${GITHUB_TOKEN:-}" ]]; then
+  add_config "access-tokens = github.com=$GITHUB_TOKEN"
 fi
 # Append extra nix configuration if provided
 if [[ $INPUT_EXTRA_NIX_CONFIG != "" ]]; then
