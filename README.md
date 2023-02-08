@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v18
+    - uses: cachix/install-nix-action@v19
       with:
         nix_path: nixpkgs=channel:nixos-unstable
     - run: nix-build
@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v18
+    - uses: cachix/install-nix-action@v19
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
     - run: nix build
@@ -120,29 +120,9 @@ Otherwise, you can add any binary cache to nix.conf using
 install-nix-action's own `extra_nix_config` input:
 
 ```yaml
-- uses: cachix/install-nix-action@v18
+- uses: cachix/install-nix-action@v19
   with:
     extra_nix_config: |
       trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
       substituters = https://hydra.iohk.io https://cache.nixos.org/
-```
-
-## Hacking
-
-Install the dependencies
-
-```bash
-$ yarn install
-```
-
-Build the typescript
-
-```bash
-$ yarn build
-```
-
-Run the tests :heavy_check_mark:
-
-```bash
-$ yarn test
 ```
