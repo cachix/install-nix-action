@@ -28,7 +28,7 @@ elif [[ -n "${GITHUB_TOKEN:-}" ]]; then
   add_config "access-tokens = github.com=$GITHUB_TOKEN"
 fi
 # Append extra nix configuration if provided
-if [[ $INPUT_EXTRA_NIX_CONFIG != "" ]]; then
+if [[ -n "${INPUT_EXTRA_NIX_CONFIG:-}" ]]; then
   add_config "$INPUT_EXTRA_NIX_CONFIG"
 fi
 if [[ ! $INPUT_EXTRA_NIX_CONFIG =~ "experimental-features" ]]; then
@@ -57,7 +57,7 @@ else
   sudo cp "$workdir/nix.conf" /etc/nix/nix.conf
 fi
 
-if [[ $INPUT_INSTALL_OPTIONS != "" ]]; then
+if [[ -n "${INPUT_INSTALL_OPTIONS:-}" ]]; then
   IFS=' ' read -r -a extra_installer_options <<< "$INPUT_INSTALL_OPTIONS"
   installer_options=("${extra_installer_options[@]}" "${installer_options[@]}")
 fi
@@ -91,7 +91,7 @@ echo "/nix/var/nix/profiles/default/bin" >> "$GITHUB_PATH"
 # new path for nix 2.14
 echo "$HOME/.nix-profile/bin" >> "$GITHUB_PATH"
 
-if [[ $INPUT_NIX_PATH != "" ]]; then
+if [[ -n "${INPUT_NIX_PATH:-}" ]]; then
   echo "NIX_PATH=${INPUT_NIX_PATH}" >> "$GITHUB_ENV"
 fi
 
