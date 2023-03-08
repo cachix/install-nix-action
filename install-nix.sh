@@ -15,7 +15,7 @@ trap 'rm -rf "$workdir"' EXIT
 
 # Configure Nix
 add_config() {
-  echo "$1" | tee -a "$workdir/nix.conf" >/dev/null
+  echo "$1" >> "$workdir/nix.conf"
 }
 # Set jobs to number of cores
 add_config "max-jobs = auto"
