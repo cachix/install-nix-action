@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if type -p nix &>/dev/null ; then
-  echo "Aborting: Nix is already installed at $(type -p nix)"
+if nix_path="$(type -p nix)" ; then
+  echo "Aborting: Nix is already installed at ${nix_path}"
   exit
 fi
 
