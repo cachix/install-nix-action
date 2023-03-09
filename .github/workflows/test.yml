@@ -18,111 +18,111 @@ jobs:
       fail-fast: false
       matrix:
         os:
-        - ubuntu-latest
-        - macos-latest
-        - macos-13
+          - ubuntu-latest
+          - macos-latest
+          - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Install Nix
-      uses: ./
-      with:
-        nix_path: ${{ env.nixpkgs_channel }}
-    - run: nix-env -iA cachix -f https://cachix.org/api/v1/install
-    - run: cat /etc/nix/nix.conf
-    # cachix should be available and be able to configure a cache
-    - run: cachix use cachix
-    - run: nix-build test.nix
+      - uses: actions/checkout@v4
+      - name: Install Nix
+        uses: ./
+        with:
+          nix_path: ${{ env.nixpkgs_channel }}
+      - run: nix-env -iA cachix -f https://cachix.org/api/v1/install
+      - run: cat /etc/nix/nix.conf
+      # cachix should be available and be able to configure a cache
+      - run: cachix use cachix
+      - run: nix-build test.nix
 
   custom-nix-path:
     strategy:
       fail-fast: false
       matrix:
         os:
-        - ubuntu-latest
-        - macos-latest
-        - macos-13
+          - ubuntu-latest
+          - macos-latest
+          - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Install Nix
-      uses: ./
-      with:
-        nix_path: ${{ env.nixpkgs_channel }}
-    - run: test $NIX_PATH == '${{ env.nixpkgs_channel }}'
-    - run: nix-build test.nix
+      - uses: actions/checkout@v4
+      - name: Install Nix
+        uses: ./
+        with:
+          nix_path: ${{ env.nixpkgs_channel }}
+      - run: test $NIX_PATH == '${{ env.nixpkgs_channel }}'
+      - run: nix-build test.nix
 
   extra-nix-config:
     strategy:
       fail-fast: false
       matrix:
         os:
-        - ubuntu-latest
-        - macos-latest
-        - macos-13
+          - ubuntu-latest
+          - macos-latest
+          - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Install Nix
-      uses: ./
-      with:
-        nix_path: ${{ env.nixpkgs_channel }}
-        extra_nix_config: |
-          sandbox = relaxed
-    - run: cat /etc/nix/nix.conf
-    - run: nix-build test.nix --arg noChroot true
+      - uses: actions/checkout@v4
+      - name: Install Nix
+        uses: ./
+        with:
+          nix_path: ${{ env.nixpkgs_channel }}
+          extra_nix_config: |
+            sandbox = relaxed
+      - run: cat /etc/nix/nix.conf
+      - run: nix-build test.nix --arg noChroot true
 
   flakes:
     strategy:
       fail-fast: false
       matrix:
         os:
-        - ubuntu-latest
-        - macos-latest
-        - macos-13
+          - ubuntu-latest
+          - macos-latest
+          - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Install Nix
-      uses: ./
-    - run: nix flake show github:NixOS/nixpkgs
+      - uses: actions/checkout@v4
+      - name: Install Nix
+        uses: ./
+      - run: nix flake show github:NixOS/nixpkgs
 
   installer-options:
     strategy:
       fail-fast: false
       matrix:
         os:
-        - ubuntu-latest
-        # - macos-latest missing installer for aarch64-darwin
-        - macos-13
+          - ubuntu-latest
+          # - macos-latest missing installer for aarch64-darwin
+          - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Install Nix
-      uses: ./
-      with:
-        nix_path: ${{ env.nixpkgs_channel }}
-        install_options: --tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve
-        install_url: https://nixos-nix-install-tests.cachix.org/serve/${{ env.pinned_installer_hash }}/install
-    - run: nix-build test.nix
+      - uses: actions/checkout@v4
+      - name: Install Nix
+        uses: ./
+        with:
+          nix_path: ${{ env.nixpkgs_channel }}
+          install_options: --tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve
+          install_url: https://nixos-nix-install-tests.cachix.org/serve/${{ env.pinned_installer_hash }}/install
+      - run: nix-build test.nix
 
   oldest-supported-installer:
     strategy:
       fail-fast: false
       matrix:
         os:
-        - ubuntu-latest
-        - macos-latest
-        - macos-13
+          - ubuntu-latest
+          - macos-latest
+          - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Install Nix
-      uses: ./
-      with:
-        nix_path: ${{ env.nixpkgs_channel }}
-        install_url: https://releases.nixos.org/nix/${{ env.oldest_supported_installer }}/install
-    - run: nix-build test.nix
+      - uses: actions/checkout@v4
+      - name: Install Nix
+        uses: ./
+        with:
+          nix_path: ${{ env.nixpkgs_channel }}
+          install_url: https://releases.nixos.org/nix/${{ env.oldest_supported_installer }}/install
+      - run: nix-build test.nix
 
   act-support:
     strategy:
@@ -130,7 +130,7 @@ jobs:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
-    - run: curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
-    - run: docker pull ghcr.io/catthehacker/ubuntu:js-20.04
-    - run: ./bin/act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:js-20.04 push -j simple-build
+      - uses: actions/checkout@v4
+      - run: curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
+      - run: docker pull ghcr.io/catthehacker/ubuntu:js-20.04
+      - run: ./bin/act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:js-20.04 push -j simple-build
