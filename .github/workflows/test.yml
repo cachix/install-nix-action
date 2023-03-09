@@ -134,3 +134,13 @@ jobs:
       - run: curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
       - run: docker pull ghcr.io/catthehacker/ubuntu:js-20.04
       - run: ./bin/act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:js-20.04 push -j simple-build
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Nix
+        uses: ./
+        with:
+          nix_path: nixpkgs=channel:nixos-22.11
+      - run: nix-shell --packages cacert git nodejs pre-commit --pure --run 'pre-commit run --all-files'
