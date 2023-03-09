@@ -91,3 +91,6 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+# JetBrains IDEA configuration
+/.idea/
