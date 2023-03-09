@@ -2,6 +2,16 @@
 # Please run `pre-commit run --all-files` when adding or changing entries.
 
 repos:
+  - repo: local
+    hooks:
+      - id: pathchk
+        name: pathchk
+        entry: pathchk
+        args: [--portability]
+        exclude: ^([a-zA-Z0-9._][a-zA-Z0-9._-]+)(/[a-zA-Z0-9._][a-zA-Z0-9._-]+)*$ # https://lists.gnu.org/archive/html/coreutils/2023-01/msg00006.html
+        language: system
+        stages: [commit]
+
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: 6f3cb139ef36133b6f903b97facc57b07cef57c9 # frozen: v3.0.0-alpha.6
     hooks:
