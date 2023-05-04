@@ -84,7 +84,7 @@ To install Nix from any commit, go to [the corresponding installer_test action](
   run: nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
 ```
 
-### How can I run NixOS tests?
+### How do I run NixOS tests?
 
 With the following inputs:
 
@@ -96,7 +96,7 @@ With the following inputs:
 
 [Note that there's no hardware acceleration on GitHub Actions.](https://github.com/actions/virtual-environments/issues/183#issuecomment-610723516).
 
-### How can I install packages via nix-env from the specified `nix_path`?
+### How do I install packages via nix-env from the specified `nix_path`?
 
 ```
 nix-env -i mypackage -f '<nixpkgs>'
@@ -125,4 +125,24 @@ install-nix-action's own `extra_nix_config` input:
     extra_nix_config: |
       trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
       substituters = https://hydra.iohk.io https://cache.nixos.org/
+```
+
+### How do I pass environment variables to commands run with `nix develop` or `nix shell`?
+
+Nix runs commands in a restricted environment by default, called `pure mode`.
+In pure mode, environment variables are not passed through to improve the reproducibility of the shell.
+
+You can use the `--keep / -k` flag to keep certain environment variables:
+
+```yaml
+- name: Run a command with nix develop
+  run: nix develop --ignore-environment --keep MY_ENV_VAR --command echo $MY_ENV_VAR
+  env:
+    MY_ENV_VAR: "hello world"
+```
+
+Or you can disable pure mode entirely with the `--impure` flag:
+
+```
+nix develop --impure
 ```
