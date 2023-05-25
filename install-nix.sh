@@ -32,7 +32,7 @@ if [[ -n "${INPUT_EXTRA_NIX_CONFIG:-}" ]]; then
   add_config "$INPUT_EXTRA_NIX_CONFIG"
 fi
 if [[ ! $INPUT_EXTRA_NIX_CONFIG =~ "experimental-features" ]]; then
-  add_config "experimental-features = nix-command flakes"
+  add_config "experimental-features = nix-command flakes auto-allocate-uids"
 fi
 
 # Nix installer flags
@@ -46,8 +46,9 @@ installer_options=(
 if [[ (! $INPUT_INSTALL_OPTIONS =~ "--no-daemon") && ($OSTYPE =~ darwin || -e /run/systemd/system) ]]; then
   installer_options+=(
     --daemon
-    --daemon-user-count "$(python3 -c 'import multiprocessing as mp; print(mp.cpu_count() * 2)')"
+    --daemon-user-count 1
   )
+  add_config "auto-allocate-uids = true"
 else
   # "fix" the following error when running nix*
   # error: the group 'nixbld' specified in 'build-users-group' does not exist
