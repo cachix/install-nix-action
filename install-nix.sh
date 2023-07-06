@@ -17,6 +17,7 @@ trap 'rm -rf "$workdir"' EXIT
 add_config() {
   echo "$1" >> "$workdir/nix.conf"
 }
+add_config "show-trace = true"
 # Set jobs to number of cores
 add_config "max-jobs = auto"
 if [[ $OSTYPE =~ darwin ]]; then
