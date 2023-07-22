@@ -46,11 +46,16 @@ installer_options=(
   --nix-extra-conf-file "$workdir/nix.conf"
 )
 
+if [[ $OSTYPE =~ darwin ]]; then
+  dameon_user_count="$(sysctl -n hw.logicalcpu_max)"
+else
+  dameon_user_count="$(nproc --all)"
+fi
 # only use the nix-daemon settings if on darwin (which get ignored) or systemd is supported
 if [[ (! $INPUT_INSTALL_OPTIONS =~ "--no-daemon") && ($OSTYPE =~ darwin || -e /run/systemd/system) ]]; then
   installer_options+=(
     --daemon
-    --daemon-user-count "$(python3 -c 'import multiprocessing as mp; print(mp.cpu_count() * 2)')"
+    --daemon-user-count "$dameon_user_count"
   )
 else
   # "fix" the following error when running nix*
