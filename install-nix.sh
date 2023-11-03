@@ -25,11 +25,18 @@ if [[ $OSTYPE =~ darwin ]]; then
 fi
 # Allow binary caches for user
 add_config "trusted-users = root ${USER:-}"
-# Add github access token
+# Add a GitHub access token.
+# Token-less access is subject to lower rate limits.
 if [[ -n "${INPUT_GITHUB_ACCESS_TOKEN:-}" ]]; then
+  echo "::debug::Using the provided github_access_token for github.com"
   add_config "access-tokens = github.com=$INPUT_GITHUB_ACCESS_TOKEN"
-elif [[ -n "${GITHUB_TOKEN:-}" ]]; then
+# Use the default GitHub token if available.
+# Skip this step if running an Enterprise instance. The default token there does not work for github.com.
+elif [[ -n "${GITHUB_TOKEN:-}" && $GITHUB_SERVER_URL == "https://github.com" ]]; then
+  echo "::debug::Using the default GITHUB_TOKEN for github.com"
   add_config "access-tokens = github.com=$GITHUB_TOKEN"
+else
+  echo "::debug::Continuing without a GitHub access token"
 fi
 # Append extra nix configuration if provided
 if [[ -n "${INPUT_EXTRA_NIX_CONFIG:-}" ]]; then
