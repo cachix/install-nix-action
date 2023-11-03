@@ -91,7 +91,7 @@ if [[ -n "${INPUT_NIX_PATH:-}" ]]; then
   echo "NIX_PATH=${INPUT_NIX_PATH}" >> "$GITHUB_ENV"
 fi
 
-# Set temporary directory (if not already set)
+# Set temporary directory (if not already set) to fix https://github.com/cachix/install-nix-action/issues/197
 if [[ -z "${TMPDIR:-}" ]]; then
   echo "TMPDIR=${RUNNER_TEMP}" >> "$GITHUB_ENV"
 fi
