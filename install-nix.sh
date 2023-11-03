@@ -91,5 +91,10 @@ if [[ -n "${INPUT_NIX_PATH:-}" ]]; then
   echo "NIX_PATH=${INPUT_NIX_PATH}" >> "$GITHUB_ENV"
 fi
 
+# Set temporary directory (if not already set)
+if [[ -z "${TMPDIR:-}" ]]; then
+  echo "TMPDIR=${RUNNER_TEMP}" >> "$GITHUB_ENV"
+fi
+
 # Close the log message group which was opened above
 echo "::endgroup::"
