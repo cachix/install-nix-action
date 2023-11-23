@@ -12,6 +12,10 @@ inputs:
     description: 'Additional installer flags passed to the installer script.'
   nix_path:
     description: 'Set NIX_PATH environment variable.'
+  enable_kvm:
+    description: 'Enable KVM for hardware-accelerated virtualization on Linux, if available.'
+    required: false
+    default: true
 branding:
   color: 'blue'
   icon: 'sun'
@@ -26,4 +30,5 @@ runs:
         INPUT_INSTALL_OPTIONS: ${{ inputs.install_options }}
         INPUT_INSTALL_URL: ${{ inputs.install_url }}
         INPUT_NIX_PATH: ${{ inputs.nix_path }}
+        INPUT_ENABLE_KVM: ${{ inputs.enable_kvm }}
         GITHUB_TOKEN: ${{ github.token }}

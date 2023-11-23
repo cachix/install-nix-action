@@ -73,6 +73,8 @@ To install Nix from any commit, go to [the corresponding installer_test action](
 
 - `nix_path`: set `NIX_PATH` environment variable, for example `nixpkgs=channel:nixos-unstable`
 
+- `enable_kvm`: whether to enable KVM for hardware-accelerated virtualization on Linux. Enabled by default if available.
+
 ---
 
 ## FAQ
