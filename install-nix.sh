@@ -56,6 +56,11 @@ fi
 if [[ ! $INPUT_EXTRA_NIX_CONFIG =~ "experimental-features" ]]; then
   add_config "experimental-features = nix-command flakes"
 fi
+# Always allow substituting from the cache, even if the derivation has `allowSubstitutes = false`.
+# This is a CI optimisation to avoid having to download the inputs for already-cached derivations to rebuild trivial text files.
+if [[ ! $INPUT_EXTRA_NIX_CONFIG =~ "always-allow-substitutes" ]]; then
+  add_config "always-allow-substitutes = true"
+fi
 
 # Nix installer flags
 installer_options=(
