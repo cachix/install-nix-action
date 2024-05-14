@@ -18,7 +18,7 @@ or [pin nixpkgs yourself](https://nix.dev/reference/pinning-nixpkgs)
 - Allows specifying extra Nix configuration options via `extra_nix_config`
 - Allows specifying `$NIX_PATH` and channels via `nix_path`
 - Share `/nix/store` between builds using [cachix-action](https://github.com/cachix/cachix-action) for simple binary cache setup to speed up your builds and share binaries with your team
-- Enables `flakes` and `nix-command` experimental features by default (to disable, set `experimental-features` via `extra_nix_config`)
+- Enables KVM on supported machines: run VMs and NixOS tests with full hardware-acceleration
 
 ## Usage
 
@@ -74,6 +74,19 @@ To install Nix from any commit, go to [the corresponding installer_test action](
 - `nix_path`: set `NIX_PATH` environment variable, for example `nixpkgs=channel:nixos-unstable`
 
 - `enable_kvm`: whether to enable KVM for hardware-accelerated virtualization on Linux. Enabled by default if available.
+
+
+## Differences from the default Nix installer
+
+Some settings have been optimised for use in CI environments:
+
+- `nix.conf` settings:
+
+  - The experimental `flakes` and `nix-command` features are enabled. Disable by overriding `experimental-features` in `extra_nix_config`.
+
+  - `always-allow-substitutes` is set to `true`. Disable by overriding `always-allow-substitutes` in `extra_nix_config`.
+
+- KVM is enabled if available. Disable by setting `enable_kvm: false`.
 
 ---
 
