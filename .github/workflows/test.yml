@@ -9,7 +9,7 @@ jobs:
   simple-build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-13]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
@@ -25,7 +25,7 @@ jobs:
   custom-nix-path:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-13]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
@@ -39,7 +39,7 @@ jobs:
   extra-nix-config:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-13]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
@@ -55,7 +55,7 @@ jobs:
   flakes:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-13]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
@@ -66,7 +66,7 @@ jobs:
   installer-options:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-13]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
@@ -81,7 +81,7 @@ jobs:
   oldest-supported-installer:
     strategy:
         matrix:
-          os: [ubuntu-latest, macos-latest]
+          os: [ubuntu-latest, macos-13]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
