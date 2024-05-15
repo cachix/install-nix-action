@@ -5,6 +5,9 @@ on:
     branches:
       - master
 
+env:
+  nixpkgs_channel: nixpkgs=channel:nixos-23.11
+
 jobs:
   simple-build:
     strategy:
@@ -20,7 +23,7 @@ jobs:
     - name: Install Nix
       uses: ./
       with:
-        nix_path: nixpkgs=channel:nixos-22.11
+        nix_path: ${{ env.nixpkgs_channel }}
     - run: nix-env -iA cachix -f https://cachix.org/api/v1/install
     - run: cat /etc/nix/nix.conf
     # cachix should be available and be able to configure a cache
@@ -41,8 +44,8 @@ jobs:
     - name: Install Nix
       uses: ./
       with:
-        nix_path: nixpkgs=channel:nixos-20.03
-    - run: test $NIX_PATH == "nixpkgs=channel:nixos-20.03"
+        nix_path: ${{ env.nixpkgs_channel }}
+    - run: test $NIX_PATH == '${{ env.nixpkgs_channel }}'
     - run: nix-build test.nix
 
   extra-nix-config:
@@ -59,7 +62,7 @@ jobs:
     - name: Install Nix
       uses: ./
       with:
-        nix_path: nixpkgs=channel:nixos-22.11
+        nix_path: ${{ env.nixpkgs_channel }}
         extra_nix_config: |
           sandbox = relaxed
     - run: cat /etc/nix/nix.conf
@@ -94,7 +97,7 @@ jobs:
     - name: Install Nix
       uses: ./
       with:
-        nix_path: nixpkgs=channel:nixos-22.11
+        nix_path: ${{ env.nixpkgs_channel }}
         install_options: --tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve
         install_url: https://nixos-nix-install-tests.cachix.org/serve/s62m7lc0q0mz2mxxm9q0kkrcg90njzhq/install
     - run: nix-build test.nix
@@ -113,7 +116,7 @@ jobs:
     - name: Install Nix
       uses: ./
       with:
-        nix_path: nixpkgs=channel:nixos-22.11
+        nix_path: ${{ env.nixpkgs_channel }}
         install_url: https://releases.nixos.org/nix/nix-2.8.0/install
     - run: nix-build test.nix
 
