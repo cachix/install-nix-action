@@ -80,13 +80,25 @@ To install Nix from any commit, go to [the corresponding installer_test action](
 
 Some settings have been optimised for use in CI environments:
 
-- `nix.conf` settings:
+- `nix.conf` settings. Override these defaults with `extra_nix_config`:
 
   - The experimental `flakes` and `nix-command` features are enabled. Disable by overriding `experimental-features` in `extra_nix_config`.
 
-  - `always-allow-substitutes` is set to `true`. Disable by overriding `always-allow-substitutes` in `extra_nix_config`.
+  - `max-jobs` is set to `auto`.
 
-- KVM is enabled if available. Disable by setting `enable_kvm: false`.
+  - `show-trace` is set to `true`.
+
+  - `$USER` is added to `trusted-users`.
+
+  - `$GITHUB_TOKEN` is added to `access_tokens` if no other `github_access_token` is provided.
+
+  - `always-allow-substitutes` is set to `true`.
+
+  - `ssl-cert-file` is set to `/etc/ssl/cert.pem` on macOS.
+
+- KVM is enabled on Linux if available. Disable by setting `enable_kvm: false`.
+
+- `$TMPDIR` is set to `$RUNNER_TEMP` if empty.
 
 ---
 
