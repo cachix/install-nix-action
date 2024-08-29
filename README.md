@@ -118,10 +118,9 @@ With the following inputs:
 ```yaml
 - uses: cachix/install-nix-action@vXX
   with:
+    enable_kvm: true
     extra_nix_config: "system-features = nixos-test benchmark big-parallel kvm"
 ```
-
-[Note that there's no hardware acceleration on GitHub Actions.](https://github.com/actions/virtual-environments/issues/183#issuecomment-610723516).
 
 ### How do I install packages via nix-env from the specified `nix_path`?
 
