@@ -6,7 +6,7 @@ on:
       - master
 
 env:
-  nixpkgs_channel: nixpkgs=channel:nixos-23.11
+  nixpkgs_channel: nixpkgs=channel:nixos-24.05
   oldest_supported_installer: nix-2.8.0
   # Fetch new versions from the Nix CI run: https://github.com/NixOS/nix/blob/master/.github/workflows/ci.yml
   # TODO: add pinning upstream or rethink this
