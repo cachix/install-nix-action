@@ -93,7 +93,7 @@ echo "installer options: ${installer_options[*]}"
 
 # There is --retry-on-errors, but only newer curl versions support that
 curl_retries=5
-while ! curl -sS -o "$workdir/install" -v --fail -L "${INPUT_INSTALL_URL:-https://releases.nixos.org/nix/nix-2.24.8/install}"
+while ! curl -sS -o "$workdir/install" -v --fail -L "${INPUT_INSTALL_URL:-https://releases.nixos.org/nix/nix-2.24.9/install}"
 do
   sleep 1
   ((curl_retries--))
