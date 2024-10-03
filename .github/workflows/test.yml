@@ -23,7 +23,7 @@ jobs:
         - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Install Nix
       uses: ./
       with:
@@ -44,7 +44,7 @@ jobs:
         - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Install Nix
       uses: ./
       with:
@@ -62,7 +62,7 @@ jobs:
         - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Install Nix
       uses: ./
       with:
@@ -82,7 +82,7 @@ jobs:
         - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Install Nix
       uses: ./
     - run: nix flake show github:NixOS/nixpkgs
@@ -97,7 +97,7 @@ jobs:
         - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Install Nix
       uses: ./
       with:
@@ -116,7 +116,7 @@ jobs:
         - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Install Nix
       uses: ./
       with:
@@ -130,7 +130,7 @@ jobs:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - run: curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
     - run: docker pull ghcr.io/catthehacker/ubuntu:js-20.04
     - run: ./bin/act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:js-20.04 push -j simple-build
