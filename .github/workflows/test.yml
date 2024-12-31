@@ -6,7 +6,7 @@ on:
       - master
 
 env:
-  nixpkgs_channel: nixpkgs=channel:nixos-24.05
+  nixpkgs_channel: nixpkgs=channel:nixos-24.11
   oldest_supported_installer: nix-2.8.0
 
 jobs:
