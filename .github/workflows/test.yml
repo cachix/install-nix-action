@@ -137,5 +137,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - run: curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
-    - run: docker pull ghcr.io/catthehacker/ubuntu:js-20.04
-    - run: ./bin/act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:js-20.04 push -j simple-build
+    - run: docker pull ghcr.io/catthehacker/ubuntu:js-24.04
+    - run: |
+        ./bin/act push \
+          -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:js-24.04 \
+          -j simple-build \
+          --matrix os:ubuntu-latest
