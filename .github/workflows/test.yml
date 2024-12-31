@@ -8,9 +8,6 @@ on:
 env:
   nixpkgs_channel: nixpkgs=channel:nixos-24.05
   oldest_supported_installer: nix-2.8.0
-  # Fetch new versions from the Nix CI run: https://github.com/NixOS/nix/blob/master/.github/workflows/ci.yml
-  # TODO: add pinning upstream or rethink this
-  pinned_installer_hash: zfzfrbb59jsqrfkldwj8drcr9nhhc49k
 
 jobs:
   simple-build:
@@ -87,23 +84,31 @@ jobs:
       uses: ./
     - run: nix flake show github:NixOS/nixpkgs
 
-  installer-options:
+  latest-installer:
     strategy:
       fail-fast: false
       matrix:
-        os:
-        - ubuntu-latest
-        # - macos-latest missing installer for aarch64-darwin
-        - macos-13
+        include:
+          - os: ubuntu-latest
+            system: x86_64-linux
+          - os: macos-latest
+            system: aarch64-darwin
+          - os: macos-13
+            system: x86_64-darwin
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
+    - name: Run NAR server
+      run: |
+        curl --location https://github.com/cachix/nar-toolbox/releases/download/v0.1.0/nar-toolbox-${{ matrix.system }} -O
+        chmod +x ./nar-toolbox-${{ matrix.system }}
+        ./nar-toolbox-${{ matrix.system }} serve https://cache.nixos.org &
     - name: Install Nix
       uses: ./
       with:
         nix_path: ${{ env.nixpkgs_channel }}
-        install_options: --tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve
-        install_url: https://nixos-nix-install-tests.cachix.org/serve/${{ env.pinned_installer_hash }}/install
+        install_url: https://hydra.nixos.org/job/nix/master/installerScript/latest-finished/download/1/install
+        install_options: "--tarball-url-prefix http://localhost:8080"
     - run: nix-build test.nix
 
   oldest-supported-installer:
