@@ -16,6 +16,7 @@ jobs:
       matrix:
         os:
         - ubuntu-latest
+        - ubuntu-24.04-arm
         - macos-latest
         - macos-13
     runs-on: ${{ matrix.os }}
@@ -37,6 +38,7 @@ jobs:
       matrix:
         os:
         - ubuntu-latest
+        - ubuntu-24.04-arm
         - macos-latest
         - macos-13
     runs-on: ${{ matrix.os }}
@@ -55,6 +57,7 @@ jobs:
       matrix:
         os:
         - ubuntu-latest
+        - ubuntu-24.04-arm
         - macos-latest
         - macos-13
     runs-on: ${{ matrix.os }}
@@ -75,6 +78,7 @@ jobs:
       matrix:
         os:
         - ubuntu-latest
+        - ubuntu-24.04-arm
         - macos-latest
         - macos-13
     runs-on: ${{ matrix.os }}
@@ -91,6 +95,8 @@ jobs:
         include:
           - os: ubuntu-latest
             system: x86_64-linux
+          - os: ubuntu-24.04-arm
+            system: aarch64-linux
           - os: macos-latest
             system: aarch64-darwin
           - os: macos-13
@@ -117,6 +123,7 @@ jobs:
       matrix:
         os:
         - ubuntu-latest
+        - ubuntu-24.04-arm
         - macos-latest
         - macos-13
     runs-on: ${{ matrix.os }}
