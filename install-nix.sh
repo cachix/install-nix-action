@@ -65,7 +65,6 @@ fi
 # Nix installer flags
 installer_options=(
   --no-channel-add
-  --darwin-use-unencrypted-nix-store-volume
   --nix-extra-conf-file "$workdir/nix.conf"
 )
 
