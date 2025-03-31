@@ -75,6 +75,8 @@ To install Nix from any commit, go to [the corresponding installer_test action](
 
 - `enable_kvm`: whether to enable KVM for hardware-accelerated virtualization on Linux. Enabled by default if available.
 
+- `set_as_trusted_user`: whether to add the current user to `trusted-users`. Enabled by default.
+
 
 ## Differences from the default Nix installer
 
