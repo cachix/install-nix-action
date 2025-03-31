@@ -5,7 +5,7 @@ inputs:
   extra_nix_config:
     description: 'Gets appended to `/etc/nix/nix.conf` if passed.'
   github_access_token:
-    description: 'Configure nix to pull from github using the given github token.'
+    description: 'Configure Nix to pull from GitHub using the given GitHub token.'
   install_url:
     description: 'Installation URL that will contain a script to install Nix.'
   install_options:
@@ -14,6 +14,10 @@ inputs:
     description: 'Set NIX_PATH environment variable.'
   enable_kvm:
     description: 'Enable KVM for hardware-accelerated virtualization on Linux, if available.'
+    required: false
+    default: true
+  set_as_trusted_user:
+    description: 'Add current user to `trusted-users`.'
     required: false
     default: true
 branding:
@@ -31,4 +35,5 @@ runs:
         INPUT_INSTALL_URL: ${{ inputs.install_url }}
         INPUT_NIX_PATH: ${{ inputs.nix_path }}
         INPUT_ENABLE_KVM: ${{ inputs.enable_kvm }}
+        INPUT_SET_AS_TRUSTED_USER: ${{ inputs.set_as_trusted_user }}
         GITHUB_TOKEN: ${{ github.token }}

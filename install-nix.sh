@@ -34,8 +34,10 @@ add_config "max-jobs = auto"
 if [[ $OSTYPE =~ darwin ]]; then
   add_config "ssl-cert-file = /etc/ssl/cert.pem"
 fi
-# Allow binary caches for user
-add_config "trusted-users = root ${USER:-}"
+# Allow binary caches specified at user level
+if [[ $INPUT_SET_AS_TRUSTED_USER == 'true' ]]; then
+  add_config "trusted-users = root ${USER:-}"
+fi
 # Add a GitHub access token.
 # Token-less access is subject to lower rate limits.
 if [[ -n "${INPUT_GITHUB_ACCESS_TOKEN:-}" ]]; then
