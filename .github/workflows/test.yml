@@ -21,7 +21,7 @@ jobs:
         - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Install Nix
       uses: ./
       with:
@@ -43,7 +43,7 @@ jobs:
         - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Install Nix
       uses: ./
       with:
@@ -62,7 +62,7 @@ jobs:
         - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Install Nix
       uses: ./
       with:
@@ -83,7 +83,7 @@ jobs:
         - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Install Nix
       uses: ./
     - run: nix flake show github:NixOS/nixpkgs
@@ -103,7 +103,7 @@ jobs:
             system: x86_64-darwin
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Run NAR server
       run: |
         curl --location https://github.com/cachix/nar-toolbox/releases/download/v0.1.0/nar-toolbox-${{ matrix.system }} -O
@@ -128,7 +128,7 @@ jobs:
         - macos-13
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - name: Install Nix
       uses: ./
       with:
@@ -142,7 +142,7 @@ jobs:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
     - run: curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
     - run: docker pull ghcr.io/catthehacker/ubuntu:js-24.04
     - run: |
