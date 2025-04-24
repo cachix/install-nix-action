@@ -174,3 +174,59 @@ Or you can disable pure mode entirely with the `--impure` flag:
 ```
 nix develop --impure
 ```
+
+### How do I pass AWS credentials to the Nix daemon?
+
+In multi-user mode, Nix commands that operate on the Nix store are forwarded to a privileged daemon. This daemon runs in a separate context from your GitHub Actions workflow and cannot access the workflow's environment variables. Consequently, any secrets or credentials defined in your workflow environment will not be available to Nix operations that require store access.
+
+There are two ways to pass AWS credentials to the Nix daemon:
+  - Configure a default profile using the AWS CLI
+  - Install Nix in single-user mode
+
+#### Configure a default profile using the AWS CLI
+
+The Nix daemon supports reading AWS credentials from the `~/.aws/credentials` file.
+
+We can use the AWS CLI to configure a default profile using short-lived credentials fetched using OIDC:
+
+```yaml
+job:
+  build:
+    runs-on: ubuntu-latest
+    # Required permissions to request AWS credentials
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v31
+      - name: Assume AWS Role
+        uses: aws-actions/configure-aws-credentials@v4.1.0
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws-cn:iam::123456789100:role/my-github-actions-role
+      - name: Make AWS Credentials accessible to nix-daemon
+        run: |
+          sudo -i aws configure set aws_access_key_id "${AWS_ACCESS_KEY_ID}"
+          sudo -i aws configure set aws_secret_access_key "${AWS_SECRET_ACCESS_KEY}"
+          sudo -i aws configure set aws_session_token "${AWS_SESSION_TOKEN}"
+          sudo -i aws configure set region "${AWS_REGION}"
+```
+
+#### Install Nix in single-user mode
+
+In some environments it may be possible to install Nix in single-user mode by passing the `--no-daemon` flag to the installer.
+This mode is normally used on platforms without an init system, like systemd, and in containerized environments with a single user that can own the entire Nix store.
+
+This approach is more generic as it allows passing environment variables directly to Nix, including secrets, proxy settings, and other configuration options.
+
+However, it may not be suitable for all environments. [Consult the Nix manual](https://nix.dev/manual/nix/latest/installation/nix-security) for the latest restrictions and differences between the two modes.
+
+For example, single-user mode is currently supported on hosted Linux GitHub runners, like `ubuntu-latest`.
+It is not supported on macOS runners, like `macos-latest`.
+
+```yaml
+- uses: cachix/install-nix-action@v31
+  with:
+    install_options: --no-daemon
+```
