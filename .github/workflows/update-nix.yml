@@ -1,0 +1,26 @@
+name: "Update nix"
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    - cron: "31 2 * * *"
+jobs:
+  update-nix-releases:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v31
+      - name: Update nix releases
+        run: |
+          latest_nix=$(
+            curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              https://api.github.com/repos/NixOS/nix/releases/latest |
+            grep '"tag_name":' |
+            sed -E 's/.*"v?([^"]+)".*/\1/'
+          )
+          sed -i -E "s/nix_version=[0-9.]+/nix_version=${latest_nix}/" ./install-nix.sh
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          title: Update nix versions
+          labels: dependencies
