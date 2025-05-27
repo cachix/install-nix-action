@@ -1,0 +1,31 @@
+name: "Update nix"
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    - cron: "31 2 * * *"
+jobs:
+  update-nix-releases:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update nix releases
+        env:
+         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          latest_nix=$(
+            gh api repos/NixOS/nix/tags --paginate --jq '.[].name' |
+            grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' |
+            sort -V |
+            tail -n 1
+          )
+          if [ -z "$latest_nix" ]; then
+            echo "Failed to determine latest Nix version." >&2
+            exit 1
+          fi
+          sed -i -E "s/nix_version=[0-9.]+/nix_version=${latest_nix}/" ./install-nix.sh
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          title: Update nix versions
+          labels: dependencies
