@@ -23,9 +23,30 @@ jobs:
             echo "Failed to determine latest Nix version." >&2
             exit 1
           fi
+          current_nix=$(grep -oE 'nix_version=[0-9.]+' ./install-nix.sh | cut -d= -f2)
+          echo "Current Nix version: ${current_nix}"
+          echo "Latest Nix version: ${latest_nix}"
+          echo "CURRENT_NIX=${current_nix}" >> $GITHUB_ENV
+          echo "LATEST_NIX=${latest_nix}" >> $GITHUB_ENV
           sed -i -E "s/nix_version=[0-9.]+/nix_version=${latest_nix}/" ./install-nix.sh
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
-          title: Update nix versions
+          title: "nix: ${{ env.CURRENT_NIX }} -> ${{ env.LATEST_NIX }}"
+          commit-message: "nix: ${{ env.CURRENT_NIX }} -> ${{ env.LATEST_NIX }}"
+          body: |
+            This PR updates the Nix version from ${{ env.CURRENT_NIX }} to ${{ env.LATEST_NIX }}.
+
+            **To trigger the CI:**
+
+            1. Checkout the PR branch:
+               ```bash
+               gh pr checkout <pr-number>
+               ```
+
+            2. Amend and force push:
+               ```bash
+               git commit --amend --no-edit
+               git push --force-with-lease
+               ```
           labels: dependencies
