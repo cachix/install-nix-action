@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 env:
   nixpkgs_channel: nixpkgs=channel:nixos-24.11
