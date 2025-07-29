@@ -121,7 +121,21 @@ if [[ -z "${TMPDIR:-}" ]]; then
   echo "TMPDIR=${RUNNER_TEMP}" >> "$GITHUB_ENV"
 fi
 
-comm -13 <(env | sort) <(. /etc/profile.d/nix.sh && env | sort) >> "$GITHUB_ENV"
+# Capture current PATH before sourcing profile
+old_path="$PATH"
+
+# Capture all environment changes
+env_changes=$(comm -13 <(env | sort) <(. /etc/profile.d/nix.sh && env | sort))
+
+# Append non-PATH changes to GITHUB_ENV
+echo "$env_changes" | grep -v "^PATH=" >> "$GITHUB_ENV"
+
+# Extract new PATH and append new entries to GITHUB_PATH
+new_path=$(echo "$env_changes" | grep "^PATH=" | cut -d= -f2-)
+if [[ -n "$new_path" ]]; then
+  # Use comm to find PATH entries in new_path but not in old_path
+  comm -13 <(tr ':' '\n' <<< "$old_path" | sort) <(tr ':' '\n' <<< "$new_path" | sort) >> "$GITHUB_PATH"
+fi
 
 # Close the log message group which was opened above
 echo "::endgroup::"
