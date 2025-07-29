@@ -121,7 +121,7 @@ if [[ -z "${TMPDIR:-}" ]]; then
   echo "TMPDIR=${RUNNER_TEMP}" >> "$GITHUB_ENV"
 fi
 
-comm -13 <(env | sort) <(. /etc/profile.d/nix.sh && env | sort) > "$GITHUB_ENV"
+comm -13 <(env | sort) <(. /etc/profile.d/nix.sh && env | sort) >> "$GITHUB_ENV"
 
 # Close the log message group which was opened above
 echo "::endgroup::"
