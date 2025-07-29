@@ -107,10 +107,10 @@ done
 
 sh "$workdir/install" "${installer_options[@]}"
 
-# Set paths
-echo "/nix/var/nix/profiles/default/bin" >> "$GITHUB_PATH"
-# new path for nix 2.14
-echo "$HOME/.nix-profile/bin" >> "$GITHUB_PATH"
+# # Set paths
+# echo "/nix/var/nix/profiles/default/bin" >> "$GITHUB_PATH"
+# # new path for nix 2.14
+# echo "$HOME/.nix-profile/bin" >> "$GITHUB_PATH"
 
 if [[ -n "${INPUT_NIX_PATH:-}" ]]; then
   echo "NIX_PATH=${INPUT_NIX_PATH}" >> "$GITHUB_ENV"
@@ -120,6 +120,8 @@ fi
 if [[ -z "${TMPDIR:-}" ]]; then
   echo "TMPDIR=${RUNNER_TEMP}" >> "$GITHUB_ENV"
 fi
+
+comm -13 <(env | sort) <(bash /etc/profile.d/nix.sh && env | sort) > "$GITHUB_ENV"
 
 # Close the log message group which was opened above
 echo "::endgroup::"
