@@ -124,18 +124,27 @@ fi
 # Capture current PATH before sourcing profile
 old_path="$PATH"
 
-# Capture all environment changes
-env_changes=$(comm -13 <(env | sort) <(. /etc/profile.d/nix.sh && env | sort))
+# Capture all environment changes to temporary files
+tmpfile_before=$(mktemp)
+tmpfile_after=$(mktemp)
+tmpfile_changes=$(mktemp)
+
+env | sort > "$tmpfile_before"
+(. /etc/profile.d/nix.sh && env | sort > "$tmpfile_after")
+comm -13 "$tmpfile_before" "$tmpfile_after" > "$tmpfile_changes"
 
 # Append non-PATH changes to GITHUB_ENV
-echo "$env_changes" | grep -v "^PATH=" >> "$GITHUB_ENV"
+grep -v "^PATH=" "$tmpfile_changes" >> "$GITHUB_ENV"
 
 # Extract new PATH and append new entries to GITHUB_PATH
-new_path=$(echo "$env_changes" | grep "^PATH=" | cut -d= -f2-)
+new_path=$(grep "^PATH=" "$tmpfile_changes" | cut -d= -f2-)
 if [[ -n "$new_path" ]]; then
   # Use comm to find PATH entries in new_path but not in old_path
   comm -13 <(tr ':' '\n' <<< "$old_path" | sort) <(tr ':' '\n' <<< "$new_path" | sort) >> "$GITHUB_PATH"
 fi
+
+# Clean up temporary files
+rm -f "$tmpfile_before" "$tmpfile_after" "$tmpfile_changes"
 
 # Close the log message group which was opened above
 echo "::endgroup::"
