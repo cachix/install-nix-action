@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  nixpkgs_channel: nixpkgs=channel:nixos-24.11
+  nixpkgs_channel: nixpkgs=channel:nixos-25.05
   oldest_supported_installer: nix-2.8.0
 
 jobs:
