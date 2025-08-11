@@ -155,6 +155,20 @@ install-nix-action's own `extra_nix_config` input:
       substituters = https://hydra.iohk.io https://cache.nixos.org/
 ```
 
+### How do I use `nix develop`?
+
+`nix develop` can be used for `steps[*].shell`.
+
+```yaml
+  # optional step: build devShell in advance for accuracy of subsequent step timing and result
+- name: Build devShell
+  run: nix build --no-link .#devShell.$(uname -m)-linux
+
+- name: Run a command with nix develop
+  shell: 'nix develop -c bash -e {0}'
+  run: echo "hello, pure world!"
+```
+
 ### How do I pass environment variables to commands run with `nix develop` or `nix shell`?
 
 Nix runs commands in a restricted environment by default, called `pure mode`.
