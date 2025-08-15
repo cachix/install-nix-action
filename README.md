@@ -155,14 +155,16 @@ install-nix-action's own `extra_nix_config` input:
       substituters = https://hydra.iohk.io https://cache.nixos.org/
 ```
 
-### How do I use `nix develop`?
+### How do I configure steps to use my flake's development environment?
 
-`nix develop` can be used for `steps[*].shell`.
+You can configure [`jobs.<job_id>.steps[*].shell`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idstepsshell)
+to use `nix develop`.
 
 ```yaml
-  # optional step: build devShell in advance for accuracy of subsequent step timing and result
-- name: Build devShell
-  run: nix build --no-link .#devShell.$(uname -m)-linux
+  # (optional) pre-build the shell separately to avoid skewing the run time of the next
+  #            step and have clear point of failure should the shell fail to build
+- name: Pre-build devShell
+  run: nix build --no-link .#devShells.$(nix eval --impure --raw --expr 'builtins.currentSystem').default
 
 - name: Run a command with nix develop
   shell: 'nix develop -c bash -e {0}'
