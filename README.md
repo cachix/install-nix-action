@@ -155,6 +155,22 @@ install-nix-action's own `extra_nix_config` input:
       substituters = https://hydra.iohk.io https://cache.nixos.org/
 ```
 
+### How do I configure steps to use my flake's development environment?
+
+You can configure [`jobs.<job_id>.steps[*].shell`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idstepsshell)
+to use `nix develop`.
+
+```yaml
+  # (optional) pre-build the shell separately to avoid skewing the run time of the next
+  #            step and have clear point of failure should the shell fail to build
+- name: Pre-build devShell
+  run: nix build --no-link .#devShells.$(nix eval --impure --raw --expr 'builtins.currentSystem').default
+
+- name: Run a command with nix develop
+  shell: 'nix develop -c bash -e {0}'
+  run: echo "hello, pure world!"
+```
+
 ### How do I pass environment variables to commands run with `nix develop` or `nix shell`?
 
 Nix runs commands in a restricted environment by default, called `pure mode`.
