@@ -31,6 +31,7 @@ add_config() {
 add_config "show-trace = true"
 # Set jobs to number of cores
 add_config "max-jobs = auto"
+# TODO: is this still necessary if we set NIX_SSL_CERT_FILE below?
 if [[ $OSTYPE =~ darwin ]]; then
   add_config "ssl-cert-file = /etc/ssl/cert.pem"
 fi
@@ -70,8 +71,14 @@ installer_options=(
   --nix-extra-conf-file "$workdir/nix.conf"
 )
 
-# only use the nix-daemon settings if on darwin (which get ignored) or systemd is supported
+# Enable daemon on macOS and Linux systems with systemd, unless --no-daemon is specified
 if [[ (! $INPUT_INSTALL_OPTIONS =~ "--no-daemon") && ($OSTYPE =~ darwin || -e /run/systemd/system) ]]; then
+  use_daemon() { true; }
+else
+  use_daemon() { false; }
+fi
+
+if use_daemon; then
   installer_options+=(
     --daemon
     --daemon-user-count "$(python3 -c 'import multiprocessing as mp; print(mp.cpu_count() * 2)')"
@@ -107,19 +114,70 @@ done
 
 sh "$workdir/install" "${installer_options[@]}"
 
-# Set paths
-echo "/nix/var/nix/profiles/default/bin" >> "$GITHUB_PATH"
-# new path for nix 2.14
-echo "$HOME/.nix-profile/bin" >> "$GITHUB_PATH"
+# Configure the environment
+#
+# Adapted from the single- and multi-user scripts:
+#   single-user: https://github.com/NixOS/nix/blob/master/scripts/nix-profile-daemon.sh.in
+#   multi-user: https://github.com/NixOS/nix/blob/master/scripts/nix-profile-daemon.sh.in
+#
+# These scripts would normally be evaluated as part of the user's shell profile.
+# GitHub doesn't evaluate profiles or rc scripts by default, so we set up the environment manually.
+echo "::debug::Nix installed, setting up environment"
 
+# Export the path to Nix
 if [[ -n "${INPUT_NIX_PATH:-}" ]]; then
   echo "NIX_PATH=${INPUT_NIX_PATH}" >> "$GITHUB_ENV"
 fi
 
-# Set temporary directory (if not already set) to fix https://github.com/cachix/install-nix-action/issues/197
+# Set temporary directory if not already set
+# Fixes https://github.com/cachix/install-nix-action/issues/197
 if [[ -z "${TMPDIR:-}" ]]; then
   echo "TMPDIR=${RUNNER_TEMP}" >> "$GITHUB_ENV"
 fi
+
+# Determine NIX_LINK path (XDG spec, newer XDG-compliant, or legacy)
+if [[ -n "${XDG_STATE_HOME:-}" && -e "$XDG_STATE_HOME/nix/profile" ]]; then
+  NIX_LINK="$XDG_STATE_HOME/nix/profile"
+elif [[ -e "$HOME/.local/state/nix/profile" ]]; then
+  NIX_LINK="$HOME/.local/state/nix/profile"
+else
+  NIX_LINK="$HOME/.nix-profile"
+fi
+
+# Set Nix profiles
+echo "NIX_PROFILES=/nix/var/nix/profiles/default $NIX_LINK" >> "$GITHUB_ENV"
+
+# Set NIX_SSL_CERT_FILE if not already configured
+if [[ -z "${NIX_SSL_CERT_FILE:-}" ]]; then
+  # Check common SSL certificate file locations
+  if [[ -f "/etc/ssl/certs/ca-certificates.crt" ]]; then # NixOS, Ubuntu, Debian, Gentoo, Arch
+    echo "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt" >> "$GITHUB_ENV"
+  elif [[ $OSTYPE =~ darwin && -f "/etc/ssl/cert.pem" ]]; then # macOS
+    echo "NIX_SSL_CERT_FILE=/etc/ssl/cert.pem" >> "$GITHUB_ENV"
+  elif [[ -f "/etc/ssl/ca-bundle.pem" ]]; then # openSUSE Tumbleweed
+    echo "NIX_SSL_CERT_FILE=/etc/ssl/ca-bundle.pem" >> "$GITHUB_ENV"
+  elif [[ -f "/etc/ssl/certs/ca-bundle.crt" ]]; then # Old NixOS
+    echo "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt" >> "$GITHUB_ENV"
+  elif [[ -f "/etc/pki/tls/certs/ca-bundle.crt" ]]; then # Fedora, CentOS
+    echo "NIX_SSL_CERT_FILE=/etc/pki/tls/certs/ca-bundle.crt" >> "$GITHUB_ENV"
+  elif [[ -f "/usr/local/share/certs/ca-root-nss.crt" ]]; then # FreeBSD
+    echo "NIX_SSL_CERT_FILE=/usr/local/share/certs/ca-root-nss.crt" >> "$GITHUB_ENV"
+  elif [[ -f "/etc/pki/tls/cacert.pem" ]]; then # OpenELEC
+    echo "NIX_SSL_CERT_FILE=/etc/pki/tls/cacert.pem" >> "$GITHUB_ENV"
+  elif [[ -f "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt" ]]; then # fall back to cacert in default Nix profile
+    echo "NIX_SSL_CERT_FILE=/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt" >> "$GITHUB_ENV"
+  elif [[ -f "$NIX_LINK/etc/ssl/certs/ca-bundle.crt" ]]; then # fall back to cacert in user Nix profile
+    echo "NIX_SSL_CERT_FILE=$NIX_LINK/etc/ssl/certs/ca-bundle.crt" >> "$GITHUB_ENV"
+  fi
+fi
+
+# Set paths based on the installation type
+if use_daemon; then
+  # Multi-user daemon install - add both paths
+  echo "/nix/var/nix/profiles/default/bin" >> "$GITHUB_PATH"
+fi
+# Always add the user profile path
+echo "$NIX_LINK/bin" >> "$GITHUB_PATH"
 
 # Close the log message group which was opened above
 echo "::endgroup::"
