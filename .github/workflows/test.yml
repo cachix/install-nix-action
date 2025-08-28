@@ -26,6 +26,8 @@ jobs:
       uses: ./
       with:
         nix_path: ${{ env.nixpkgs_channel }}
+    - name: Test environment variables
+      run: ./test-env.sh
     - run: nix-env -iA cachix -f https://cachix.org/api/v1/install
     - run: cat /etc/nix/nix.conf
     # cachix should be available and be able to configure a cache
