@@ -8,7 +8,6 @@ on:
 
 env:
   nixpkgs_channel: nixpkgs=channel:nixos-25.05
-  oldest_supported_installer: nix-2.8.0
 
 jobs:
   simple-build:
@@ -122,11 +121,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os:
-        - ubuntu-latest
-        - ubuntu-24.04-arm
-        - macos-latest
-        - macos-13
+        include:
+          - os: ubuntu-latest
+            installer_version: nix-2.8.0
+          - os: ubuntu-24.04-arm
+            installer_version: nix-2.8.0
+          - os: macos-latest
+            # macOS 15 Sequoia took over some of the ids previously used for _nixbld
+            # 2.18.6 is the oldest version that was patched for this.
+            installer_version: nix-2.18.6
+          - os: macos-13
+            installer_version: nix-2.8.0
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -134,7 +139,7 @@ jobs:
       uses: ./
       with:
         nix_path: ${{ env.nixpkgs_channel }}
-        install_url: https://releases.nixos.org/nix/${{ env.oldest_supported_installer }}/install
+        install_url: https://releases.nixos.org/nix/${{ matrix.installer_version }}/install
     - run: nix-build test.nix
 
   act-support:
