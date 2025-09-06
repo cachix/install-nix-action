@@ -2,23 +2,18 @@
 
 ![GitHub Actions badge](https://github.com/cachix/install-nix-action/workflows/install-nix-action%20test/badge.svg)
 
-Installs [Nix](https://nixos.org/nix/) on GitHub Actions for the supported platforms: Linux and macOS.
-
-By default it has no nixpkgs configured, you have to set `nix_path`
-by [picking a channel](https://status.nixos.org/)
-or [pin nixpkgs yourself](https://nix.dev/reference/pinning-nixpkgs)
-(see also [pinning tutorial](https://nix.dev/tutorials/towards-reproducibility-pinning-nixpkgs)).
+Installs [Nix](https://nixos.org/nix/) on GitHub Actions runners for Linux and macOS.
 
 # Features
 
-- Quick installation (~4s on Linux, ~20s on macOS)
-- Multi-User installation (with sandboxing enabled only on Linux)
-- [Self-hosted GitHub runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners) support
+- Quick installation (~4s on Linux / ~20s on macOS)
+- Multi-user installation with sandboxing enabled by default on Linux
+- Support for [self-hosted GitHub runners](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners)
 - Allows specifying Nix installation URL via `install_url` (the oldest supported Nix version is 2.3.5)
 - Allows specifying extra Nix configuration options via `extra_nix_config`
 - Allows specifying `$NIX_PATH` and channels via `nix_path`
-- Share `/nix/store` between builds using [cachix-action](https://github.com/cachix/cachix-action) for simple binary cache setup to speed up your builds and share binaries with your team
 - Enables KVM on supported machines: run VMs and NixOS tests with full hardware-acceleration
+- Pair with a binary cache from [cachix-action](https://github.com/cachix/cachix-action) to speed up re-builds and share binaries across your team
 
 ## Usage
 
@@ -33,7 +28,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: cachix/install-nix-action@v31
       with:
         nix_path: nixpkgs=channel:nixos-unstable
@@ -51,7 +46,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: cachix/install-nix-action@v31
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
@@ -59,23 +54,17 @@ jobs:
     - run: nix flake check
 ```
 
-To install Nix from any commit, go to [the corresponding installer_test action](https://github.com/NixOS/nix/runs/2219534360) and click on "Run cachix/install-nix-action@XX" step and expand the first line.
+## Inputs
 
-## Inputs (specify using `with:`)
-
-- `extra_nix_config`: append to `/etc/nix/nix.conf`
-
-- `github_access_token`: configure Nix to pull from GitHub using the given GitHub token. This helps work around rate limit issues. Has no effect when `access-tokens` is also specified in `extra_nix_config`.
-
-- `install_url`: specify URL to install Nix from (useful for testing non-stable releases or pinning Nix, for example https://releases.nixos.org/nix/nix-2.3.7/install)
-
-- `install_options`: additional installer flags passed to the installer script.
-
-- `nix_path`: set `NIX_PATH` environment variable, for example `nixpkgs=channel:nixos-unstable`
-
-- `enable_kvm`: whether to enable KVM for hardware-accelerated virtualization on Linux. Enabled by default if available.
-
-- `set_as_trusted_user`: whether to add the current user to `trusted-users`. Enabled by default.
+| Name | Description | Default |
+|------|-------------|---------|
+| `install_url` | URL to install Nix from. Useful for testing non-stable releases or pinning a specific Nix version (e.g., https://releases.nixos.org/nix/nix-2.3.7/install) | `""` |
+| `install_options` | Additional flags to pass to the Nix installer script | `""` |
+| `extra_nix_config` | Additional configuration to append to `/etc/nix/nix.conf` | `""` |
+| `nix_path` | Value to set for the `NIX_PATH` environment variable (e.g., `nixpkgs=channel:nixos-unstable`) | `""` |
+| `github_access_token` | GitHub token for Nix to use when pulling from GitHub repositories. Helps work around rate limit issues. Has no effect when `access-tokens` is specified in `extra_nix_config`. | `$GITHUB_TOKEN` if available |
+| `set_as_trusted_user` | Add the current user to the `trusted-users` list | `true` |
+| `enable_kvm` | Enable KVM for hardware-accelerated virtualization on Linux | `true` |
 
 
 ## Differences from the default Nix installer
@@ -106,19 +95,30 @@ Some settings have been optimised for use in CI environments:
 
 ## FAQ
 
-### How do I print nixpkgs version I have configured?
+### How do I print the nixpkgs version I've configured?
 
 ```yaml
 - name: Print nixpkgs version
   run: nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version'
 ```
 
-### How do I run NixOS tests?
+### How do I add a nixpkgs channel?
 
-With the following inputs:
+This action doesn't set up any channels by default.
+Use `nix_path` to configure optional channels by [picking a channel](https://status.nixos.org/) or [pinning nixpkgs](https://nix.dev/reference/pinning-nixpkgs) to a specific commit.
 
 ```yaml
-- uses: cachix/install-nix-action@vXX
+- uses: cachix/install-nix-action@v31
+  with:
+    nix_path: nixpkgs=channel:nixos-unstable
+```
+
+See also the [tutorial on pinning on nix.dev](https://nix.dev/tutorials/towards-reproducibility-pinning-nixpkgs).
+
+### How do I run NixOS tests on Linux?
+
+```yaml
+- uses: cachix/install-nix-action@v31
   with:
     enable_kvm: true
     extra_nix_config: "system-features = nixos-test benchmark big-parallel kvm"
@@ -137,7 +137,7 @@ using [cachix-action](https://github.com/cachix/cachix-action), you
 should use their `extraPullNames` input like this:
 
 ```yaml
-- uses: cachix/cachix-action@vXX
+- uses: cachix/cachix-action@v31
    with:
      name: mycache
      authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -214,10 +214,10 @@ job:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: cachix/install-nix-action@v31
       - name: Assume AWS Role
-        uses: aws-actions/configure-aws-credentials@v4.1.0
+        uses: aws-actions/configure-aws-credentials@v5.0.0
         with:
           aws-region: us-east-1
           role-to-assume: arn:aws-cn:iam::123456789100:role/my-github-actions-role
