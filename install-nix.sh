@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if nix_path="$(type -p nix)" ; then
+if nix_path="$(type -p nix)"; then
   echo "Aborting: Nix is already installed at ${nix_path}"
   exit
 fi
@@ -94,7 +94,7 @@ else
 fi
 
 if [[ -n "${INPUT_INSTALL_OPTIONS:-}" ]]; then
-  IFS=' ' read -r -a extra_installer_options <<< "$INPUT_INSTALL_OPTIONS"
+  IFS=' ' read -r -a extra_installer_options <<<"$INPUT_INSTALL_OPTIONS"
   installer_options=("${extra_installer_options[@]}" "${installer_options[@]}")
 fi
 
@@ -103,8 +103,7 @@ echo "installer options: ${installer_options[*]}"
 # There is --retry-on-errors, but only newer curl versions support that
 curl_retries=5
 nix_version=2.31.2
-while ! curl -sS -o "$workdir/install" -v --fail -L "${INPUT_INSTALL_URL:-https://releases.nixos.org/nix/nix-${nix_version}/install}"
-do
+while ! curl -sS -o "$workdir/install" -v --fail -L "${INPUT_INSTALL_URL:-https://releases.nixos.org/nix/nix-${nix_version}/install}"; do
   sleep 1
   ((curl_retries--))
   if [[ $curl_retries -le 0 ]]; then
@@ -127,13 +126,13 @@ echo "::debug::Nix installed, setting up environment"
 
 # Export the path to Nix
 if [[ -n "${INPUT_NIX_PATH:-}" ]]; then
-  echo "NIX_PATH=${INPUT_NIX_PATH}" >> "$GITHUB_ENV"
+  echo "NIX_PATH=${INPUT_NIX_PATH}" >>"$GITHUB_ENV"
 fi
 
 # Set temporary directory if not already set
 # Fixes https://github.com/cachix/install-nix-action/issues/197
 if [[ -z "${TMPDIR:-}" ]]; then
-  echo "TMPDIR=${RUNNER_TEMP}" >> "$GITHUB_ENV"
+  echo "TMPDIR=${RUNNER_TEMP}" >>"$GITHUB_ENV"
 fi
 
 # Determine NIX_LINK path (XDG spec, newer XDG-compliant, or legacy)
@@ -146,35 +145,35 @@ else
 fi
 
 # Set Nix profiles
-echo "NIX_PROFILES=/nix/var/nix/profiles/default $NIX_LINK" >> "$GITHUB_ENV"
+echo "NIX_PROFILES=/nix/var/nix/profiles/default $NIX_LINK" >>"$GITHUB_ENV"
 
 # Set NIX_SSL_CERT_FILE if not already configured
 if [[ -z "${NIX_SSL_CERT_FILE:-}" ]]; then
   # Check common SSL certificate file locations
   if [[ -f "/etc/ssl/certs/ca-certificates.crt" ]]; then # NixOS, Ubuntu, Debian, Gentoo, Arch
-    echo "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt" >> "$GITHUB_ENV"
+    echo "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt" >>"$GITHUB_ENV"
   elif [[ $OSTYPE =~ darwin && -f "/etc/ssl/cert.pem" ]]; then # macOS
-    echo "NIX_SSL_CERT_FILE=/etc/ssl/cert.pem" >> "$GITHUB_ENV"
+    echo "NIX_SSL_CERT_FILE=/etc/ssl/cert.pem" >>"$GITHUB_ENV"
   elif [[ -f "/etc/ssl/ca-bundle.pem" ]]; then # openSUSE Tumbleweed
-    echo "NIX_SSL_CERT_FILE=/etc/ssl/ca-bundle.pem" >> "$GITHUB_ENV"
+    echo "NIX_SSL_CERT_FILE=/etc/ssl/ca-bundle.pem" >>"$GITHUB_ENV"
   elif [[ -f "/etc/ssl/certs/ca-bundle.crt" ]]; then # Old NixOS
-    echo "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt" >> "$GITHUB_ENV"
+    echo "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt" >>"$GITHUB_ENV"
   elif [[ -f "/etc/pki/tls/certs/ca-bundle.crt" ]]; then # Fedora, CentOS
-    echo "NIX_SSL_CERT_FILE=/etc/pki/tls/certs/ca-bundle.crt" >> "$GITHUB_ENV"
+    echo "NIX_SSL_CERT_FILE=/etc/pki/tls/certs/ca-bundle.crt" >>"$GITHUB_ENV"
   elif [[ -f "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt" ]]; then # fall back to cacert in default Nix profile
-    echo "NIX_SSL_CERT_FILE=/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt" >> "$GITHUB_ENV"
+    echo "NIX_SSL_CERT_FILE=/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt" >>"$GITHUB_ENV"
   elif [[ -f "$NIX_LINK/etc/ssl/certs/ca-bundle.crt" ]]; then # fall back to cacert in user Nix profile
-    echo "NIX_SSL_CERT_FILE=$NIX_LINK/etc/ssl/certs/ca-bundle.crt" >> "$GITHUB_ENV"
+    echo "NIX_SSL_CERT_FILE=$NIX_LINK/etc/ssl/certs/ca-bundle.crt" >>"$GITHUB_ENV"
   fi
 fi
 
 # Set paths based on the installation type
 if use_daemon; then
   # Multi-user daemon install - add both paths
-  echo "/nix/var/nix/profiles/default/bin" >> "$GITHUB_PATH"
+  echo "/nix/var/nix/profiles/default/bin" >>"$GITHUB_PATH"
 fi
 # Always add the user profile path
-echo "$NIX_LINK/bin" >> "$GITHUB_PATH"
+echo "$NIX_LINK/bin" >>"$GITHUB_PATH"
 
 # Close the log message group which was opened above
 echo "::endgroup::"
