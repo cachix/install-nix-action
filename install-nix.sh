@@ -26,12 +26,13 @@ trap 'rm -rf "$workdir"' EXIT
 
 # Configure Nix
 add_config() {
-  echo "$1" >> "$workdir/nix.conf"
+  echo "$1" >>"$workdir/nix.conf"
 }
 add_config "show-trace = true"
 # Set jobs to number of cores
 add_config "max-jobs = auto"
-# TODO: is this still necessary if we set NIX_SSL_CERT_FILE below?
+# Configure the nix-daemon to use certificates.
+# In multi-user installs, NIX_SSL_CERT_FILE only works if set in the daemon's service file.
 if [[ $OSTYPE =~ darwin ]]; then
   add_config "ssl-cert-file = /etc/ssl/cert.pem"
 fi
