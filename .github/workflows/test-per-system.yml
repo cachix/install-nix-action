@@ -1,0 +1,97 @@
+name: Test Runner
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        description: 'GitHub Actions runner to use (e.g., ubuntu-latest, macos-13)'
+        required: true
+        type: string
+      system:
+        description: 'Target system architecture (e.g., x86_64-linux, aarch64-darwin)'
+        required: true
+        type: string
+      oldest_installer_version:
+        description: 'Oldest supported Nix installer version to test (e.g., nix-2.8.0)'
+        required: true
+        type: string
+
+env:
+  nixpkgs_channel: nixpkgs=channel:nixos-25.05
+
+jobs:
+  simple-build:
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - name: Install Nix
+      uses: ./
+      with:
+        nix_path: ${{ env.nixpkgs_channel }}
+    - name: Test environment variables
+      run: ./tests/test-env.sh
+    - run: nix-env -iA cachix -f https://cachix.org/api/v1/install
+    - run: cat /etc/nix/nix.conf
+    # cachix should be available and be able to configure a cache
+    - run: cachix use cachix
+    - run: nix-build tests/test-build.nix
+
+  custom-nix-path:
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - name: Install Nix
+      uses: ./
+      with:
+        nix_path: ${{ env.nixpkgs_channel }}
+    - run: test $NIX_PATH == '${{ env.nixpkgs_channel }}'
+    - run: nix-build tests/test-build.nix
+
+  extra-nix-config:
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - name: Install Nix
+      uses: ./
+      with:
+        nix_path: ${{ env.nixpkgs_channel }}
+        extra_nix_config: |
+          sandbox = relaxed
+    - run: cat /etc/nix/nix.conf
+    - run: nix-build tests/test-build.nix --arg noChroot true
+
+  flakes:
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - name: Install Nix
+      uses: ./
+    - run: nix flake show github:NixOS/nixpkgs
+
+  latest-installer:
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - name: Run NAR server
+      run: |
+        curl --location https://github.com/cachix/nar-toolbox/releases/download/v0.1.0/nar-toolbox-${{ inputs.system }} -O
+        chmod +x ./nar-toolbox-${{ inputs.system }}
+        ./nar-toolbox-${{ inputs.system }} serve https://cache.nixos.org &
+    - name: Install Nix
+      uses: ./
+      with:
+        nix_path: ${{ env.nixpkgs_channel }}
+        install_url: https://hydra.nixos.org/job/nix/master/installerScript/latest-finished/download/1/install
+        install_options: "--tarball-url-prefix http://localhost:8080"
+    - run: nix-build tests/test-build.nix
+
+  oldest-supported-installer:
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - name: Install Nix
+      uses: ./
+      with:
+        nix_path: ${{ env.nixpkgs_channel }}
+        install_url: https://releases.nixos.org/nix/${{ inputs.oldest_installer_version }}/install
+    - run: nix-build tests/test-build.nix
