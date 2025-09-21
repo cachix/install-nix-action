@@ -20,10 +20,12 @@ if [[ -n "${NIX_SSL_CERT_FILE:-}" ]]; then
   if [[ -f "$NIX_SSL_CERT_FILE" ]]; then
     echo "✓ NIX_SSL_CERT_FILE is set and file exists"
   else
-    echo "⚠ NIX_SSL_CERT_FILE is set but file does not exist: $NIX_SSL_CERT_FILE"
+    echo "✗ NIX_SSL_CERT_FILE is set but file does not exist: $NIX_SSL_CERT_FILE"
+    exit 1
   fi
 else
-  echo "⚠ NIX_SSL_CERT_FILE is not set (may be OK depending on system)"
+  echo "✗ NIX_SSL_CERT_FILE is not set"
+  exit 1
 fi
 
 # Test PATH contains Nix paths
@@ -41,6 +43,7 @@ if [[ -n "${NIX_PATH:-}" ]]; then
   echo "✓ NIX_PATH is set"
 else
   echo "NIX_PATH: <not set>"
+  exit 1
 fi
 
 # Test TMPDIR
@@ -49,6 +52,7 @@ if [[ -n "${TMPDIR:-}" ]]; then
   echo "✓ TMPDIR is set"
 else
   echo "⚠ TMPDIR is not set"
+  exit 1
 fi
 
 echo
