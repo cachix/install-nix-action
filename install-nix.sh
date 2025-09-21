@@ -160,10 +160,6 @@ if [[ -z "${NIX_SSL_CERT_FILE:-}" ]]; then
     echo "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt" >> "$GITHUB_ENV"
   elif [[ -f "/etc/pki/tls/certs/ca-bundle.crt" ]]; then # Fedora, CentOS
     echo "NIX_SSL_CERT_FILE=/etc/pki/tls/certs/ca-bundle.crt" >> "$GITHUB_ENV"
-  elif [[ -f "/usr/local/share/certs/ca-root-nss.crt" ]]; then # FreeBSD
-    echo "NIX_SSL_CERT_FILE=/usr/local/share/certs/ca-root-nss.crt" >> "$GITHUB_ENV"
-  elif [[ -f "/etc/pki/tls/cacert.pem" ]]; then # OpenELEC
-    echo "NIX_SSL_CERT_FILE=/etc/pki/tls/cacert.pem" >> "$GITHUB_ENV"
   elif [[ -f "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt" ]]; then # fall back to cacert in default Nix profile
     echo "NIX_SSL_CERT_FILE=/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt" >> "$GITHUB_ENV"
   elif [[ -f "$NIX_LINK/etc/ssl/certs/ca-bundle.crt" ]]; then # fall back to cacert in user Nix profile
