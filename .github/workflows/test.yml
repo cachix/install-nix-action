@@ -13,6 +13,9 @@ jobs:
   test:
     strategy:
       fail-fast: false
+      # For the list of available images:
+      #   GitHub images: https://github.com/actions/runner-images?tab=readme-ov-file#available-images
+      #   Partner images: https://github.com/actions/partner-runner-images?tab=readme-ov-file#available-images
       matrix:
         include:
           - runs-on: ubuntu-latest
