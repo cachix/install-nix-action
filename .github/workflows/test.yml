@@ -18,11 +18,14 @@ jobs:
           - runs-on: ubuntu-latest
             system: x86_64-linux
             oldest_installer_version: nix-2.8.0
+          - runs-on: ubuntu-22.04
+            system: x86_64-linux
+            oldest_installer_version: nix-2.8.0
           - runs-on: ubuntu-24.04-arm
             system: aarch64-linux
             oldest_installer_version: nix-2.8.0
-          - runs-on: ubuntu-22.04
-            system: x86_64-linux
+          - runs-on: ubuntu-22.04-arm
+            system: aarch64-linux
             oldest_installer_version: nix-2.8.0
           - runs-on: macos-latest
             system: aarch64-darwin
