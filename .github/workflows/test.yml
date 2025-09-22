@@ -10,143 +10,43 @@ env:
   nixpkgs_channel: nixpkgs=channel:nixos-25.05
 
 jobs:
-  simple-build:
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-        - ubuntu-latest
-        - ubuntu-24.04-arm
-        - macos-latest
-        - macos-13
-    runs-on: ${{ matrix.os }}
-    steps:
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-    - name: Install Nix
-      uses: ./
-      with:
-        nix_path: ${{ env.nixpkgs_channel }}
-    - run: nix-env -iA cachix -f https://cachix.org/api/v1/install
-    - run: cat /etc/nix/nix.conf
-    # cachix should be available and be able to configure a cache
-    - run: cachix use cachix
-    - run: nix-build test.nix
-
-  custom-nix-path:
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-        - ubuntu-latest
-        - ubuntu-24.04-arm
-        - macos-latest
-        - macos-13
-    runs-on: ${{ matrix.os }}
-    steps:
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-    - name: Install Nix
-      uses: ./
-      with:
-        nix_path: ${{ env.nixpkgs_channel }}
-    - run: test $NIX_PATH == '${{ env.nixpkgs_channel }}'
-    - run: nix-build test.nix
-
-  extra-nix-config:
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-        - ubuntu-latest
-        - ubuntu-24.04-arm
-        - macos-latest
-        - macos-13
-    runs-on: ${{ matrix.os }}
-    steps:
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-    - name: Install Nix
-      uses: ./
-      with:
-        nix_path: ${{ env.nixpkgs_channel }}
-        extra_nix_config: |
-          sandbox = relaxed
-    - run: cat /etc/nix/nix.conf
-    - run: nix-build test.nix --arg noChroot true
-
-  flakes:
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-        - ubuntu-latest
-        - ubuntu-24.04-arm
-        - macos-latest
-        - macos-13
-    runs-on: ${{ matrix.os }}
-    steps:
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-    - name: Install Nix
-      uses: ./
-    - run: nix flake show github:NixOS/nixpkgs
-
-  latest-installer:
+  test:
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - runs-on: ubuntu-latest
             system: x86_64-linux
-          - os: ubuntu-24.04-arm
+            oldest_installer_version: nix-2.8.0
+          - runs-on: ubuntu-24.04-arm
             system: aarch64-linux
-          - os: macos-latest
+            oldest_installer_version: nix-2.8.0
+          - runs-on: ubuntu-22.04
+            system: x86_64-linux
+            oldest_installer_version: nix-2.8.0
+          - runs-on: macos-latest
             system: aarch64-darwin
-          - os: macos-13
+            oldest_installer_version: nix-2.18.6
+          - runs-on: macos-26
+            system: aarch64-darwin
+            oldest_installer_version: nix-2.18.6
+          - runs-on: macos-15
+            system: aarch64-darwin
+            oldest_installer_version: nix-2.18.6
+          - runs-on: macos-14
+            system: aarch64-darwin
+            oldest_installer_version: nix-2.8.0
+          - runs-on: macos-13
             system: x86_64-darwin
-    runs-on: ${{ matrix.os }}
-    steps:
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-    - name: Run NAR server
-      run: |
-        curl --location https://github.com/cachix/nar-toolbox/releases/download/v0.1.0/nar-toolbox-${{ matrix.system }} -O
-        chmod +x ./nar-toolbox-${{ matrix.system }}
-        ./nar-toolbox-${{ matrix.system }} serve https://cache.nixos.org &
-    - name: Install Nix
-      uses: ./
-      with:
-        nix_path: ${{ env.nixpkgs_channel }}
-        install_url: https://hydra.nixos.org/job/nix/master/installerScript/latest-finished/download/1/install
-        install_options: "--tarball-url-prefix http://localhost:8080"
-    - run: nix-build test.nix
-
-  oldest-supported-installer:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-latest
-            installer_version: nix-2.8.0
-          - os: ubuntu-24.04-arm
-            installer_version: nix-2.8.0
-          - os: macos-latest
-            # macOS 15 Sequoia took over some of the ids previously used for _nixbld
-            # 2.18.6 is the oldest version that was patched for this.
-            installer_version: nix-2.18.6
-          - os: macos-13
-            installer_version: nix-2.8.0
-    runs-on: ${{ matrix.os }}
-    steps:
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-    - name: Install Nix
-      uses: ./
-      with:
-        nix_path: ${{ env.nixpkgs_channel }}
-        install_url: https://releases.nixos.org/nix/${{ matrix.installer_version }}/install
-    - run: nix-build test.nix
+            oldest_installer_version: nix-2.8.0
+    uses: ./.github/workflows/test-per-system.yml
+    with:
+      runs-on: ${{ matrix.runs-on }}
+      system: ${{ matrix.system }}
+      oldest_installer_version: ${{ matrix.oldest_installer_version }}
 
   act-support:
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
     - run: curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
