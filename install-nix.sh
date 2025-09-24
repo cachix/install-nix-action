@@ -156,19 +156,19 @@ echo "NIX_PROFILES=/nix/var/nix/profiles/default $NIX_LINK" >>"$GITHUB_ENV"
 # Set NIX_SSL_CERT_FILE if not already configured
 if [[ -z "${NIX_SSL_CERT_FILE:-}" ]]; then
   # Check common SSL certificate file locations
-  if [[ -f "/etc/ssl/certs/ca-certificates.crt" ]]; then # NixOS, Ubuntu, Debian, Gentoo, Arch
+  if [[ -e "/etc/ssl/certs/ca-certificates.crt" ]]; then # NixOS, Ubuntu, Debian, Gentoo, Arch
     echo "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt" >>"$GITHUB_ENV"
-  elif [[ $OSTYPE =~ darwin && -f "/etc/ssl/cert.pem" ]]; then # macOS
+  elif [[ $OSTYPE =~ darwin && -e "/etc/ssl/cert.pem" ]]; then # macOS
     echo "NIX_SSL_CERT_FILE=/etc/ssl/cert.pem" >>"$GITHUB_ENV"
-  elif [[ -f "/etc/ssl/ca-bundle.pem" ]]; then # openSUSE Tumbleweed
+  elif [[ -e "/etc/ssl/ca-bundle.pem" ]]; then # openSUSE Tumbleweed
     echo "NIX_SSL_CERT_FILE=/etc/ssl/ca-bundle.pem" >>"$GITHUB_ENV"
-  elif [[ -f "/etc/ssl/certs/ca-bundle.crt" ]]; then # Old NixOS
+  elif [[ -e "/etc/ssl/certs/ca-bundle.crt" ]]; then # Old NixOS
     echo "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt" >>"$GITHUB_ENV"
-  elif [[ -f "/etc/pki/tls/certs/ca-bundle.crt" ]]; then # Fedora, CentOS
+  elif [[ -e "/etc/pki/tls/certs/ca-bundle.crt" ]]; then # Fedora, CentOS
     echo "NIX_SSL_CERT_FILE=/etc/pki/tls/certs/ca-bundle.crt" >>"$GITHUB_ENV"
-  elif [[ -f "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt" ]]; then # fall back to cacert in default Nix profile
+  elif [[ -e "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt" ]]; then # fall back to cacert in default Nix profile
     echo "NIX_SSL_CERT_FILE=/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt" >>"$GITHUB_ENV"
-  elif [[ -f "$NIX_LINK/etc/ssl/certs/ca-bundle.crt" ]]; then # fall back to cacert in user Nix profile
+  elif [[ -e "$NIX_LINK/etc/ssl/certs/ca-bundle.crt" ]]; then # fall back to cacert in user Nix profile
     echo "NIX_SSL_CERT_FILE=$NIX_LINK/etc/ssl/certs/ca-bundle.crt" >>"$GITHUB_ENV"
   fi
 fi
