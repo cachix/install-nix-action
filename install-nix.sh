@@ -135,11 +135,17 @@ if [[ -z "${TMPDIR:-}" ]]; then
   echo "TMPDIR=${RUNNER_TEMP}" >>"$GITHUB_ENV"
 fi
 
-# Determine NIX_LINK path (XDG spec, newer XDG-compliant, or legacy)
-if [[ -n "${XDG_STATE_HOME:-}" && -e "$XDG_STATE_HOME/nix/profile" ]]; then
-  NIX_LINK="$XDG_STATE_HOME/nix/profile"
-elif [[ -e "$HOME/.local/state/nix/profile" ]]; then
-  NIX_LINK="$HOME/.local/state/nix/profile"
+# Determine the profile path.
+#
+# Different versions of Nix support (from newest to oldest):
+#   - NIX_STATE_HOME to fully control the location of home files
+#   - XDG_STATE_HOME, defaulting to .local/state/nix/profile
+#   - $HOME/.nix-profile
+#
+# These directories are created by calling `nix profile`, so they don't exist at this point.
+# Without parsing the Nix version, our best bet is the legacy-ish ~/.nix-profile.
+if [[ -n "${NIX_STATE_HOME:-}" ]]; then
+  NIX_LINK="$NIX_STATE_HOME/profile"
 else
   NIX_LINK="$HOME/.nix-profile"
 fi
