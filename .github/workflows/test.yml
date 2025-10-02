@@ -42,6 +42,10 @@ jobs:
           - runs-on: macos-14
             system: aarch64-darwin
             oldest_installer_version: nix-2.8.0
+          - runs-on: macos-15-intel
+            system: x86_64-darwin
+            oldest_installer_version: nix-2.18.0
+          # macos13 will be retired on 04/12/2025
           - runs-on: macos-13
             system: x86_64-darwin
             oldest_installer_version: nix-2.8.0
