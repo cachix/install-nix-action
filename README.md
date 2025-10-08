@@ -1,6 +1,6 @@
 # install-nix-action
 
-![GitHub Actions badge](https://github.com/cachix/install-nix-action/workflows/install-nix-action%20test/badge.svg)
+[![Tests](https://github.com/cachix/install-nix-action/actions/workflows/test.yml/badge.svg)](https://github.com/cachix/install-nix-action/actions/workflows/test.yml)
 
 Installs [Nix](https://nixos.org/nix/) on GitHub Actions runners for Linux and macOS.
 
@@ -58,14 +58,13 @@ jobs:
 
 | Name | Description | Default |
 |------|-------------|---------|
-| `install_url` | URL to install Nix from. Useful for testing non-stable releases or pinning a specific Nix version (e.g., https://releases.nixos.org/nix/nix-2.3.7/install) | `""` |
+| `install_url` | URL to install Nix from. Useful for testing non-stable releases or pinning a specific Nix version (e.g., <https://releases.nixos.org/nix/nix-2.3.7/install>) | `""` |
 | `install_options` | Additional flags to pass to the Nix installer script | `""` |
 | `extra_nix_config` | Additional configuration to append to `/etc/nix/nix.conf` | `""` |
 | `nix_path` | Value to set for the `NIX_PATH` environment variable (e.g., `nixpkgs=channel:nixos-unstable`) | `""` |
 | `github_access_token` | GitHub token for Nix to use when pulling from GitHub repositories. Helps work around rate limit issues. Has no effect when `access-tokens` is specified in `extra_nix_config`. | `$GITHUB_TOKEN` if available |
 | `set_as_trusted_user` | Add the current user to the `trusted-users` list | `true` |
 | `enable_kvm` | Enable KVM for hardware-accelerated virtualization on Linux | `true` |
-
 
 ## Differences from the default Nix installer
 
@@ -196,8 +195,9 @@ nix develop --impure
 In multi-user mode, Nix commands that operate on the Nix store are forwarded to a privileged daemon. This daemon runs in a separate context from your GitHub Actions workflow and cannot access the workflow's environment variables. Consequently, any secrets or credentials defined in your workflow environment will not be available to Nix operations that require store access.
 
 There are two ways to pass AWS credentials to the Nix daemon:
-  - Configure a default profile using the AWS CLI
-  - Install Nix in single-user mode
+
+- Configure a default profile using the AWS CLI
+- Install Nix in single-user mode
 
 #### Configure a default profile using the AWS CLI
 
