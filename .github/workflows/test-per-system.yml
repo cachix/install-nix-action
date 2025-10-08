@@ -13,7 +13,8 @@ on:
         type: string
       oldest_installer_version:
         description: 'Oldest supported Nix installer version to test (e.g., nix-2.8.0)'
-        required: true
+        required: false
+        default: 'nix-2.8.0'
         type: string
 
 env:

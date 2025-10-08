@@ -65,4 +65,5 @@ jobs:
         ./bin/act push \
           -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:js-24.04 \
           -j simple-build \
-          --matrix os:ubuntu-latest
+          --matrix runs-on:ubuntu-latest \
+          --matrix system:x86_64-linux
