@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       runs-on:
-        description: 'GitHub Actions runner to use (e.g., ubuntu-latest, macos-13)'
+        description: 'GitHub Actions runner to use (e.g., ubuntu-latest, macos-latest)'
         required: true
         type: string
       system:
