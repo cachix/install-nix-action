@@ -8,7 +8,7 @@ jobs:
   update-nix-releases:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Update nix releases
         env:
          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
