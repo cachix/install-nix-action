@@ -24,7 +24,7 @@ jobs:
   simple-build:
     runs-on: ${{ inputs.runs-on }}
     steps:
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
     - name: Install Nix
       uses: ./
       with:
@@ -40,7 +40,7 @@ jobs:
   custom-nix-path:
     runs-on: ${{ inputs.runs-on }}
     steps:
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
     - name: Install Nix
       uses: ./
       with:
@@ -51,7 +51,7 @@ jobs:
   extra-nix-config:
     runs-on: ${{ inputs.runs-on }}
     steps:
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
     - name: Install Nix
       uses: ./
       with:
@@ -64,7 +64,7 @@ jobs:
   flakes:
     runs-on: ${{ inputs.runs-on }}
     steps:
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
     - name: Install Nix
       uses: ./
     - run: nix flake show github:NixOS/nixpkgs
@@ -72,7 +72,7 @@ jobs:
   latest-installer:
     runs-on: ${{ inputs.runs-on }}
     steps:
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
     - name: Run NAR server
       run: |
         curl --location https://github.com/cachix/nar-toolbox/releases/download/v0.1.0/nar-toolbox-${{ inputs.system }} -O
@@ -89,7 +89,7 @@ jobs:
   oldest-supported-installer:
     runs-on: ${{ inputs.runs-on }}
     steps:
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
     - name: Install Nix
       uses: ./
       with:
