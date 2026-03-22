@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  nixpkgs_channel: nixpkgs=channel:nixos-25.05
+  nixpkgs_channel: nixpkgs=channel:nixos-25.11
 
 jobs:
   test:
