@@ -39,9 +39,6 @@ jobs:
           - runs-on: macos-15
             system: aarch64-darwin
             oldest_installer_version: nix-2.18.6
-          - runs-on: macos-14
-            system: aarch64-darwin
-            oldest_installer_version: nix-2.8.0
           - runs-on: macos-15-intel
             system: x86_64-darwin
             oldest_installer_version: nix-2.18.6
