@@ -28,7 +28,13 @@ jobs:
           echo "Latest Nix version: ${latest_nix}"
           echo "CURRENT_NIX=${current_nix}" >> $GITHUB_ENV
           echo "LATEST_NIX=${latest_nix}" >> $GITHUB_ENV
+          latest_sha256=$(curl -sSfL --retry 5 "https://releases.nixos.org/nix/nix-${latest_nix}/install.sha256")
+          if ! [[ "$latest_sha256" =~ ^[0-9a-f]{64}$ ]]; then
+            echo "Failed to fetch the installer hash for Nix ${latest_nix}." >&2
+            exit 1
+          fi
           sed -i -E "s/nix_version=[0-9.]+/nix_version=${latest_nix}/" ./install-nix.sh
+          sed -i -E "s/nix_install_sha256=[0-9a-f]+/nix_install_sha256=${latest_sha256}/" ./install-nix.sh
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
         with:
