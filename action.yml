@@ -8,6 +8,8 @@ inputs:
     description: 'Configure Nix to pull from GitHub using the given GitHub token.'
   install_url:
     description: 'Installation URL that will contain a script to install Nix.'
+  install_hash:
+    description: 'Expected SHA-256 of the installer script. Required when `install_url` is set.'
   install_options:
     description: 'Additional installer flags passed to the installer script.'
   nix_path:
@@ -33,6 +35,7 @@ runs:
         INPUT_GITHUB_ACCESS_TOKEN: ${{ inputs.github_access_token }}
         INPUT_INSTALL_OPTIONS: ${{ inputs.install_options }}
         INPUT_INSTALL_URL: ${{ inputs.install_url }}
+        INPUT_INSTALL_HASH: ${{ inputs.install_hash }}
         INPUT_NIX_PATH: ${{ inputs.nix_path }}
         INPUT_ENABLE_KVM: ${{ inputs.enable_kvm }}
         INPUT_SET_AS_TRUSTED_USER: ${{ inputs.set_as_trusted_user }}

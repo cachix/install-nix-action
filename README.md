@@ -59,6 +59,7 @@ jobs:
 | Name | Description | Default |
 |------|-------------|---------|
 | `install_url` | URL to install Nix from. Useful for testing non-stable releases or pinning a specific Nix version (e.g., <https://releases.nixos.org/nix/nix-2.3.7/install>) | `""` |
+| `install_hash` | Expected SHA-256 of the installer script. **Required when `install_url` is set.** Releases publish it next to the installer (e.g., <https://releases.nixos.org/nix/nix-2.3.7/install.sha256>) | Pinned hash of the default installer |
 | `install_options` | Additional flags to pass to the Nix installer script | `""` |
 | `extra_nix_config` | Additional configuration to append to `/etc/nix/nix.conf` | `""` |
 | `nix_path` | Value to set for the `NIX_PATH` environment variable (e.g., `nixpkgs=channel:nixos-unstable`) | `""` |
