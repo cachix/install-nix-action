@@ -16,6 +16,11 @@ on:
         required: false
         default: 'nix-2.8.0'
         type: string
+      oldest_installer_sha256:
+        description: 'SHA-256 of the oldest_installer_version installer script'
+        required: false
+        default: 'f43bfedfca9151479462d8bc11f238615a2d52f19b14894d8e2b59980e75ef72'
+        type: string
 
 env:
   nixpkgs_channel: nixpkgs=channel:nixos-25.05
@@ -80,11 +85,19 @@ jobs:
         curl --location https://github.com/cachix/nar-toolbox/releases/download/v0.1.0/nar-toolbox-${{ inputs.system }} -O
         chmod +x ./nar-toolbox-${{ inputs.system }}
         ./nar-toolbox-${{ inputs.system }} serve https://cache.nixos.org &
+    # Resolve latest-finished to a fixed build, so the URL and the hash Hydra reports for it can't drift apart
+    - name: Find latest installer
+      id: latest-installer
+      run: |
+        build=$(curl -sSfL --retry 5 -H 'Accept: application/json' https://hydra.nixos.org/job/nix/master/installerScript/latest-finished)
+        echo "url=https://hydra.nixos.org/build/$(jq -r '.id' <<<"$build")/download/1/install" >>"$GITHUB_OUTPUT"
+        echo "sha256=$(jq -r '.buildproducts."1".sha256hash' <<<"$build")" >>"$GITHUB_OUTPUT"
     - name: Install Nix
       uses: ./
       with:
         nix_path: ${{ env.nixpkgs_channel }}
-        install_url: https://hydra.nixos.org/job/nix/master/installerScript/latest-finished/download/1/install
+        install_url: ${{ steps.latest-installer.outputs.url }}
+        install_hash: ${{ steps.latest-installer.outputs.sha256 }}
         install_options: "--tarball-url-prefix http://localhost:8080"
     - run: nix-build tests/test-build.nix
 
@@ -97,4 +110,5 @@ jobs:
       with:
         nix_path: ${{ env.nixpkgs_channel }}
         install_url: https://releases.nixos.org/nix/${{ inputs.oldest_installer_version }}/install
+        install_hash: ${{ inputs.oldest_installer_sha256 }}
     - run: nix-build tests/test-build.nix

@@ -21,32 +21,41 @@ jobs:
           - runs-on: ubuntu-latest
             system: x86_64-linux
             oldest_installer_version: nix-2.8.0
+            oldest_installer_sha256: f43bfedfca9151479462d8bc11f238615a2d52f19b14894d8e2b59980e75ef72
           - runs-on: ubuntu-22.04
             system: x86_64-linux
             oldest_installer_version: nix-2.8.0
+            oldest_installer_sha256: f43bfedfca9151479462d8bc11f238615a2d52f19b14894d8e2b59980e75ef72
           - runs-on: ubuntu-24.04-arm
             system: aarch64-linux
             oldest_installer_version: nix-2.8.0
+            oldest_installer_sha256: f43bfedfca9151479462d8bc11f238615a2d52f19b14894d8e2b59980e75ef72
           - runs-on: ubuntu-22.04-arm
             system: aarch64-linux
             oldest_installer_version: nix-2.8.0
+            oldest_installer_sha256: f43bfedfca9151479462d8bc11f238615a2d52f19b14894d8e2b59980e75ef72
           - runs-on: macos-latest
             system: aarch64-darwin
             oldest_installer_version: nix-2.18.6
+            oldest_installer_sha256: b4eedc0c884003d3f2b9ca2a4bb08ea14f7eab15f25800470161d6b51d3179b9
           - runs-on: macos-26
             system: aarch64-darwin
             oldest_installer_version: nix-2.18.6
+            oldest_installer_sha256: b4eedc0c884003d3f2b9ca2a4bb08ea14f7eab15f25800470161d6b51d3179b9
           - runs-on: macos-15
             system: aarch64-darwin
             oldest_installer_version: nix-2.18.6
+            oldest_installer_sha256: b4eedc0c884003d3f2b9ca2a4bb08ea14f7eab15f25800470161d6b51d3179b9
           - runs-on: macos-15-intel
             system: x86_64-darwin
             oldest_installer_version: nix-2.18.6
+            oldest_installer_sha256: b4eedc0c884003d3f2b9ca2a4bb08ea14f7eab15f25800470161d6b51d3179b9
     uses: ./.github/workflows/test-per-system.yml
     with:
       runs-on: ${{ matrix.runs-on }}
       system: ${{ matrix.system }}
       oldest_installer_version: ${{ matrix.oldest_installer_version }}
+      oldest_installer_sha256: ${{ matrix.oldest_installer_sha256 }}
 
   act-support:
     runs-on: ubuntu-latest
