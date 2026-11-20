@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v7
-    - uses: cachix/install-nix-action@v31
+    - uses: cachix/install-nix-action@v32
       with:
         nix_path: nixpkgs=channel:nixos-unstable
     - run: nix-build
@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v7
-    - uses: cachix/install-nix-action@v31
+    - uses: cachix/install-nix-action@v32
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
     - run: nix build
@@ -107,7 +107,7 @@ This action doesn't set up any channels by default.
 Use `nix_path` to configure optional channels by [picking a channel](https://status.nixos.org/) or [pinning nixpkgs](https://nix.dev/reference/pinning-nixpkgs) to a specific commit.
 
 ```yaml
-- uses: cachix/install-nix-action@v31
+- uses: cachix/install-nix-action@v32
   with:
     nix_path: nixpkgs=channel:nixos-unstable
 ```
@@ -117,7 +117,7 @@ See also the [tutorial on pinning on nix.dev](https://nix.dev/tutorials/towards-
 ### How do I run NixOS tests on Linux?
 
 ```yaml
-- uses: cachix/install-nix-action@v31
+- uses: cachix/install-nix-action@v32
   with:
     enable_kvm: true
     extra_nix_config: "system-features = nixos-test benchmark big-parallel kvm"
@@ -147,7 +147,7 @@ Otherwise, you can add any binary cache to nix.conf using
 install-nix-action's own `extra_nix_config` input:
 
 ```yaml
-- uses: cachix/install-nix-action@v31
+- uses: cachix/install-nix-action@v32
   with:
     extra_nix_config: |
       trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
@@ -215,7 +215,7 @@ job:
       contents: read
     steps:
       - uses: actions/checkout@v7
-      - uses: cachix/install-nix-action@v31
+      - uses: cachix/install-nix-action@v32
       - name: Assume AWS Role
         uses: aws-actions/configure-aws-credentials@v6
         with:
@@ -242,7 +242,7 @@ For example, single-user mode is currently supported on hosted Linux GitHub runn
 It is not supported on macOS runners, like `macos-latest`.
 
 ```yaml
-- uses: cachix/install-nix-action@v31
+- uses: cachix/install-nix-action@v32
   with:
     install_options: --no-daemon
 ```
