@@ -28,7 +28,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
     - uses: cachix/install-nix-action@v31
       with:
         nix_path: nixpkgs=channel:nixos-unstable
@@ -46,7 +46,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
     - uses: cachix/install-nix-action@v31
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
@@ -136,11 +136,11 @@ using [cachix-action](https://github.com/cachix/cachix-action), you
 should use their `extraPullNames` input like this:
 
 ```yaml
-- uses: cachix/cachix-action@v31
-   with:
-     name: mycache
-     authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-     extraPullNames: nix-community
+- uses: cachix/cachix-action@v17
+  with:
+    name: mycache
+    authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    extraPullNames: nix-community
 ```
 
 Otherwise, you can add any binary cache to nix.conf using
@@ -214,10 +214,10 @@ job:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: cachix/install-nix-action@v31
       - name: Assume AWS Role
-        uses: aws-actions/configure-aws-credentials@v5.0.0
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-region: us-east-1
           role-to-assume: arn:aws-cn:iam::123456789100:role/my-github-actions-role
