@@ -70,8 +70,6 @@ jobs:
     - run: nix flake show github:NixOS/nixpkgs
 
   latest-installer:
-    # Nix master no longer provides binary tarballs for x86_64-darwin
-    if: inputs.system != 'x86_64-darwin'
     runs-on: ${{ inputs.runs-on }}
     steps:
     - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
