@@ -95,7 +95,7 @@ jobs:
       with:
         nix_path: ${{ env.nixpkgs_channel }}
         install_url: ${{ steps.latest-installer.outputs.url }}
-        install_hash: ${{ steps.latest-installer.outputs.sha256 }}
+        install_sha256: ${{ steps.latest-installer.outputs.sha256 }}
         install_options: "--tarball-url-prefix http://localhost:8080"
     - run: nix-build tests/test-build.nix
 
@@ -108,5 +108,5 @@ jobs:
       with:
         nix_path: ${{ env.nixpkgs_channel }}
         install_url: https://releases.nixos.org/nix/${{ inputs.oldest_installer_version }}/install
-        install_hash: ${{ inputs.oldest_installer_sha256 }}
+        install_sha256: ${{ inputs.oldest_installer_sha256 }}
     - run: nix-build tests/test-build.nix

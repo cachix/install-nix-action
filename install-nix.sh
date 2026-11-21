@@ -107,17 +107,17 @@ nix_version=2.36.0
 nix_install_sha256=8388dfd4d3c3a0c2dc79f764d453eafcc244255f47c93c1958f4775af22f0353
 
 # Pick the installer and the hash to check it against:
-#   - default installer: the pinned hash above, unless install_hash overrides it
-#   - custom install_url: install_hash if set, otherwise the installer is not verified
+#   - default installer: the pinned hash above, unless install_sha256 overrides it
+#   - custom install_url: install_sha256 if set, otherwise the installer is not verified
 if [[ -n "${INPUT_INSTALL_URL:-}" ]]; then
   install_url=$INPUT_INSTALL_URL
-  expected_sha256=${INPUT_INSTALL_HASH:-}
+  expected_sha256=${INPUT_INSTALL_SHA256:-}
   if [[ -z "$expected_sha256" ]]; then
-    echo "::warning::install_url is set but install_hash is not, so the installer will not be verified. Set install_hash to the SHA-256 of '$install_url'."
+    echo "::warning::install_url is set but install_sha256 is not, so the installer will not be verified. Set install_sha256 to the SHA-256 of '$install_url'."
   fi
 else
   install_url="https://releases.nixos.org/nix/nix-${nix_version}/install"
-  expected_sha256=${INPUT_INSTALL_HASH:-$nix_install_sha256}
+  expected_sha256=${INPUT_INSTALL_SHA256:-$nix_install_sha256}
 fi
 
 while ! curl -sS -o "$workdir/install" -v --fail -L "$install_url"; do
