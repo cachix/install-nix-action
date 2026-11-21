@@ -102,7 +102,25 @@ echo "installer options: ${installer_options[*]}"
 # There is --retry-on-errors, but only newer curl versions support that
 curl_retries=5
 nix_version=2.36.0
-while ! curl -sS -o "$workdir/install" -v --fail -L "${INPUT_INSTALL_URL:-https://releases.nixos.org/nix/nix-${nix_version}/install}"; do
+# sha256 of https://releases.nixos.org/nix/nix-${nix_version}/install
+# Kept in sync with nix_version by .github/workflows/update-nix.yml
+nix_install_sha256=8388dfd4d3c3a0c2dc79f764d453eafcc244255f47c93c1958f4775af22f0353
+
+# Pick the installer and the hash to check it against:
+#   - default installer: the pinned hash above, unless install_sha256 overrides it
+#   - custom install_url: install_sha256 if set, otherwise the installer is not verified
+if [[ -n "${INPUT_INSTALL_URL:-}" ]]; then
+  install_url=$INPUT_INSTALL_URL
+  expected_sha256=${INPUT_INSTALL_SHA256:-}
+  if [[ -z "$expected_sha256" ]]; then
+    echo "::warning::install_url is set but install_sha256 is not, so the installer will not be verified. Set install_sha256 to the SHA-256 of '$install_url'."
+  fi
+else
+  install_url="https://releases.nixos.org/nix/nix-${nix_version}/install"
+  expected_sha256=${INPUT_INSTALL_SHA256:-$nix_install_sha256}
+fi
+
+while ! curl -sS -o "$workdir/install" -v --fail -L "$install_url"; do
   sleep 1
   ((curl_retries--))
   if [[ $curl_retries -le 0 ]]; then
@@ -110,6 +128,29 @@ while ! curl -sS -o "$workdir/install" -v --fail -L "${INPUT_INSTALL_URL:-https:
     exit 1
   fi
 done
+
+# Verify the integrity of the installer
+if [[ -n "$expected_sha256" ]]; then
+  if command -v sha256sum >/dev/null 2>&1; then
+    actual_sha256="$(sha256sum -b "$workdir/install" | cut -c1-64)"
+  elif command -v shasum >/dev/null 2>&1; then
+    actual_sha256="$(shasum -a 256 -b "$workdir/install" | cut -c1-64)"
+  elif command -v openssl >/dev/null 2>&1; then
+    actual_sha256="$(openssl dgst -r -sha256 "$workdir/install" | cut -c1-64)"
+  else
+    echo "Cannot verify the SHA-256 hash of '$install_url'; you need one of 'sha256sum', 'shasum', or 'openssl'" >&2
+    exit 1
+  fi
+
+  # Compare case-insensitively, hashes are often published in either case
+  # (tr instead of ${var,,}: macOS ships bash 3.2)
+  expected_sha256=$(tr '[:upper:]' '[:lower:]' <<<"$expected_sha256")
+  if [[ "$actual_sha256" != "$expected_sha256" ]]; then
+    echo "SHA-256 hash mismatch for '$install_url': expected $expected_sha256, got $actual_sha256" >&2
+    exit 1
+  fi
+  echo "Verified SHA-256 of '$install_url': $actual_sha256"
+fi
 
 sh "$workdir/install" "${installer_options[@]}"
 
