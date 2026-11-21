@@ -9,7 +9,7 @@ Installs [Nix](https://nixos.org/nix/) on GitHub Actions runners for Linux and m
 - Quick installation (~4s on Linux / ~20s on macOS)
 - Multi-user installation with sandboxing enabled by default on Linux
 - Support for [self-hosted GitHub runners](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners)
-- Allows specifying Nix installation URL via `install_url` (the oldest supported Nix version is 2.3.5)
+- Allows specifying Nix installation URL via `install_url` (the oldest supported Nix version is 2.3.5), verified against `install_sha256` if set
 - Allows specifying extra Nix configuration options via `extra_nix_config`
 - Allows specifying `$NIX_PATH` and channels via `nix_path`
 - Enables KVM on supported machines: run VMs and NixOS tests with full hardware-acceleration
@@ -59,7 +59,7 @@ jobs:
 | Name | Description | Default |
 |------|-------------|---------|
 | `install_url` | URL to install Nix from. Useful for testing non-stable releases or pinning a specific Nix version (e.g., <https://releases.nixos.org/nix/nix-2.3.7/install>) | `""` |
-| `install_sha256` | Expected SHA-256 of the installer script. Recommended when `install_url` is set: without it, the custom installer is not verified. Releases publish it next to the installer (e.g., <https://releases.nixos.org/nix/nix-2.3.7/install.sha256>) | Pinned hash of the default installer |
+| `install_sha256` | Expected SHA-256 of the installer script. Optional, but recommended when `install_url` is set | Pinned hash of the default installer |
 | `install_options` | Additional flags to pass to the Nix installer script | `""` |
 | `extra_nix_config` | Additional configuration to append to `/etc/nix/nix.conf` | `""` |
 | `nix_path` | Value to set for the `NIX_PATH` environment variable (e.g., `nixpkgs=channel:nixos-unstable`) | `""` |
@@ -114,6 +114,25 @@ Use `nix_path` to configure optional channels by [picking a channel](https://sta
 ```
 
 See also the [tutorial on pinning on nix.dev](https://nix.dev/tutorials/towards-reproducibility-pinning-nixpkgs).
+
+### How do I install a specific version of Nix?
+
+Point `install_url` at the installer for that version, and set `install_sha256`
+to its SHA-256 (releases publish it next to the installer, at `<install_url>.sha256`):
+
+```yaml
+- uses: cachix/install-nix-action@v32
+  with:
+    install_url: https://releases.nixos.org/nix/nix-2.18.6/install
+    install_sha256: b4eedc0c884003d3f2b9ca2a4bb08ea14f7eab15f25800470161d6b51d3179b9
+```
+
+`install_sha256` is optional, but recommended: the action hashes the downloaded installer
+and refuses to run it if the hash doesn't match, so a compromised or
+unexpectedly changed installer fails the step instead of running on your runner.
+Without it, the action prints a warning and runs the installer unverified.
+
+The default installer is always verified against a hash pinned in the action.
 
 ### How do I run NixOS tests on Linux?
 
