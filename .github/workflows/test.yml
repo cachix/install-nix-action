@@ -53,7 +53,6 @@ jobs:
       oldest_installer_version: ${{ matrix.oldest_installer_version }}
       oldest_installer_sha256: ${{ matrix.oldest_installer_sha256 }}
 
-  # The action must refuse to run an installer that doesn't match install_sha256
   install-sha256-mismatch:
     strategy:
       fail-fast: false
@@ -62,7 +61,6 @@ jobs:
         install_url:
           # Default installer
           - ""
-          # Custom installer
           - https://releases.nixos.org/nix/nix-2.18.6/install
     runs-on: ${{ matrix.runs-on }}
     steps:
@@ -77,11 +75,11 @@ jobs:
     - name: Check that the install failed
       run: |
         if [[ "${{ steps.install-nix.outcome }}" != "failure" ]]; then
-          echo "Expected the install to fail on a SHA-256 mismatch, got: ${{ steps.install-nix.outcome }}" >&2
+          echo "Expected the install to fail, got: ${{ steps.install-nix.outcome }}" >&2
           exit 1
         fi
-        if command -v nix >/dev/null 2>&1 || [[ -e /nix/var/nix ]]; then
-          echo "Nix was installed despite the SHA-256 mismatch" >&2
+        if command -v nix >/dev/null || [[ -e /nix/var/nix ]]; then
+          echo "Nix was installed" >&2
           exit 1
         fi
 

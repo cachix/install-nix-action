@@ -9,7 +9,7 @@ inputs:
   install_url:
     description: 'Installation URL that will contain a script to install Nix.'
   install_sha256:
-    description: 'Expected SHA-256 of the installer script. Defaults to the pinned hash of the default installer; with a custom `install_url` and no hash, the installer is not verified.'
+    description: 'Expected SHA-256 hash of the installer script.'
   install_options:
     description: 'Additional installer flags passed to the installer script.'
   nix_path:
